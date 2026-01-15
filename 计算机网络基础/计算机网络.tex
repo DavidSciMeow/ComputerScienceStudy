@@ -1,0 +1,84 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setmainfont{Times New Roman}
+\setCJKmainfont[BoldFont={SimHei}]{SimSun}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage[left=1.5cm,right=1.5cm,top=1.5cm,bottom=1.5cm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,decorations.pathreplacing}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[section]{placeins}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.85}
+\setcounter{topnumber}{5}
+\setcounter{totalnumber}{5}
+
+\usepackage{tocloft}
+\renewcommand{\contentsname}{目录}
+
+\usepackage{booktabs} 
+\usepackage{array}
+\usepackage[pdfencoding=auto,unicode=true,bookmarks=true,colorlinks=true,linkcolor=black]{hyperref}
+\usepackage{bookmark}
+\usepackage{makecell}
+\usepackage{longtable}
+
+\setcounter{secnumdepth}{5} 
+\setcounter{tocdepth}{3}   
+
+% Macro: produce a totally empty page with centered text (no headers/footers)
+\newcommand{\blankpagewithtext}[1]{%
+	\clearpage%
+	\thispagestyle{empty}%
+	\vspace*{\fill}%
+	\begin{center}{\Huge #1}\end{center}%
+	\vspace*{\fill}%
+	\clearpage%
+}
+
+\title{计算机网络知识点汇编}
+\date{2026-01-10}
+\author{DavidSciMeow}
+
+\begin{document}
+\pagenumbering{Roman}
+\begin{titlepage}
+\vspace*{\fill}
+\begin{center}
+{ \huge \bfseries 计算机网络知识点汇编}\\[0.4cm]
+\emph{Author: DavidSciMeow}\\
+\vfill
+{\large 2026-01-10}
+\end{center}
+\end{titlepage}
+\tableofcontents
+% Example: insert a blank page that contains only the two characters “留空” centered
+\blankpagewithtext{留空}
+\newpage
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\include{chapters/01-计算机网络概述}
+\newpage
+\include{chapters/02-物理层}
+\newpage
+\include{chapters/03-数据链路层}
+\newpage
+\include{chapters/04-网络层}
+\newpage
+\include{chapters/05-传输层}
+\newpage
+\include{chapters/06-应用层}
+\newpage
+\include{chapters/07-总结}
+\newpage
+
+\end{document}

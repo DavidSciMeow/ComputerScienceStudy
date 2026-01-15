@@ -1,0 +1,179 @@
+\section{传输层}
+\subsection{传输层功能}
+\begin{itemize}
+	\item 传输层位于网络层之上，应用层之下，主要负责在端系统之间提供逻辑通信。
+	\item 复用（上层数据使用相同的传输层协议）
+	\item 分用（同一传输层协议数据向上交付给不同协议的应用）
+	\item 对收到的报文段首部、数据部分差错检测（网络层只检测首部）。
+	\item 面向连接的 TCP，无连接的 UDP。
+	\item 可靠不可靠：是否使用确认机制对传输的数据进行确认。
+\end{itemize}
+
+\subsection{传输层寻址（端口）}
+\begin{itemize}
+	\item 端口号(port number)用于标识主机上不同的应用进程。
+	\item 端口号是一个16位的整数，取值范围为0~65535。
+	\item 端口号分为三类：
+	\begin{itemize}
+		\item 知名端口(Well-known Ports)：0~1023，由系统或知名服务使用。
+		\item 注册端口(Registered Ports)：1024~49151，由用户进程或应用程序注册使用。
+		\item 动态/私有端口(Dynamic/Private Ports)：49152~65535，通常由客户端临时分配使用，用于短期通信。
+	\end{itemize}
+	\item 传输层协议通过源端口号和目的端口号来区分不同的应用进程，实现多路复用和分用功能。
+\end{itemize}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/端口号分类.png}
+	\caption{端口号分类}
+\end{figure}
+\paragraph{熟知端口号表}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{@{}c c c@{}}
+		\toprule
+		服务 & 协议 & 端口号 \\
+		\midrule
+		HTTP & TCP & 80 \\
+		HTTPS & TCP & 443 \\
+		FTP & TCP & 20 (数据), 21 (控制) \\
+		SSH & TCP & 22 \\
+		Telnet & TCP & 23 \\
+		SMTP & TCP & 25 \\
+		DNS & UDP/TCP & 53 \\
+		DHCP & UDP & 67 (服务器), 68 (客户端) \\
+		POP3 & TCP & 110 \\
+		IMAP & TCP & 143 \\
+		SNMP & UDP & 161 \\
+		LDAP & TCP/UDP & 389 \\
+		RDP & TCP/UDP & 3389 \\
+		\bottomrule
+	\end{tabular}
+	\caption{常见服务的熟知端口号}
+	\label{tab:well-known-ports}
+\end{table}
+
+\newpage
+
+\subsection{传输层协议}
+\subsubsection{UDP协议}
+\paragraph{概念与特点}
+\begin{itemize}
+	\item 用户数据报协议(User Datagram Protocol, UDP)是一种无连接的传输层协议。
+	\item 只在 IP 数据包上增加两个基本服务，复用分用、差错检测。
+	\item 无需建立连接。
+	\item 接收方发现端口号不正确则丢弃，并由 ICMP 发送差错报告端口不可达。
+\end{itemize}
+
+\paragraph{UDP报文格式}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/UDP报文头部.png}
+	\caption{UDP报文头部}
+\end{figure}
+
+\paragraph{UDP校验}
+\begin{itemize}
+	\item UDP 校验和用于检测数据在传输过程中是否发生错误。
+	\item 计算方法：
+	\begin{itemize}
+		\item 将 UDP 头部、数据部分和伪首部（包含源 IP 地址、目的 IP 地址、协议号和 UDP 长度）按 16 位字进行分组。
+		\item 将所有 16 位字进行二进制求和，若有进位则加到结果的最低位。
+		\item 对求和结果取反，得到校验和。
+	\end{itemize}
+	\item 接收方收到 UDP 数据报后，使用相同的方法计算校验和，并与报文中的校验和进行比较。
+	\item 若两者不匹配，则说明数据在传输过程中发生了错误，接收方会丢弃该数据报。
+	\item UDP 校验和是可选的，但强烈建议使用以提高数据传输的可靠性。
+\end{itemize}
+
+\subsubsection{TCP协议}
+\paragraph{概念}
+传输控制协议(Transmission Control Protocol, TCP)是一种面向连接的、可靠的传输层协议。它提供端到端的可靠数据传输服务，确保数据按顺序到达且无差错。
+\paragraph{特点}
+\begin{itemize}
+	\item 面向连接：在数据传输前需要建立连接，传输完成后释放连接。
+	\item 可靠传输：通过序列号、确认号、重传机制确保数据可靠到达。
+	\item 流量控制：使用滑动窗口机制控制数据流量，防止接收方被淹没。
+	\item 拥塞控制：动态调整发送速率以适应网络拥塞状况。
+	\item 全双工通信：允许双方同时发送和接收数据。
+\end{itemize}
+\paragraph{TCP报文格式}
+\begin{itemize}
+	\item 
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=.8\textwidth]{images/TCP报文头部.png}
+		\caption{TCP报文头部}
+	\end{figure}
+\end{itemize}
+\paragraph{TCP的连接管理}
+\begin{itemize}
+	\item 三次握手建立连接：
+	\begin{itemize}
+		\item 第一次握手：客户端发送 SYN 报文段，进入 SYN\_SENT 状态。
+		\item 第二次握手：服务器收到 SYN 报文段，回复 SYN-ACK 报文段，进入 SYN\_RECEIVED 状态。
+		\item 第三次握手：客户端收到 SYN-ACK 报文段，回复 ACK 报文段，连接建立成功，双方进入 ESTABLISHED 状态。
+	\end{itemize}
+	\item 四次挥手释放连接：
+	\begin{itemize}
+		\item 第一次挥手：客户端发送 FIN 报文段，进入 FIN\_WAIT\_1 状态。
+		\item 第二次挥手：服务器收到 FIN 报文段，回复 ACK 报文段，进入 CLOSE\_WAIT 状态；客户端收到 ACK 报文段，进入 FIN\_WAIT\_2 状态。
+		\item 第三次挥手：服务器发送 FIN 报文段，进入 LAST\_ACK 状态。
+		\item 第四次挥手：客户端收到 FIN 报文段，回复 ACK 报文段，进入 TIME\_WAIT 状态，等待一段时间后进入 CLOSED 状态；服务器收到 ACK 报文段，连接释放成功，进入 CLOSED 状态。
+	\end{itemize}
+\end{itemize}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/TCP连接管理.png}
+	\caption{TCP连接管理}
+\end{figure}
+
+\paragraph{TCP可靠传输}
+\begin{itemize}
+	\item 校验（和 UDP 的校验一样）。
+	\item 序号：建立在字节流上，而非报文段上。
+	\item 确认：TCP 使用累计确认，发送一个报文段字节后才发回一个确认。
+	\item 重传：
+	\item - 超时（超时重传时间应略大于加权平均往返时间 RTTs）。
+	\item - 冗余 ACK（某个报文段确认时捎带冗余 ACK 标表示之前丢失的报文段，期望收到之前丢失的）。规定当发送方收到同一个报文段 3 个冗余 ACK 时，可以认为跟在这个被确认报文段后的报文段已经丢失。这种技术被称为快速重传。
+\end{itemize}
+
+\paragraph{TCP流量控制}
+\begin{itemize}
+	\item 滑动窗口机制：接收方通过调整窗口大小来控制发送方的发送速率。
+	\item - 是一个速度匹配服务，消除发送方使接收方缓存区溢出的可能性。
+	\item - 要求 发送方（cwnd 拥塞窗口）$<=$ 接收方（rwnd 接收方窗口）。
+	\item 接收方根据自己缓冲区大小确定接收窗口告诉发送方；
+	\item 发送方根据当前网络拥塞程序估计确定拥塞窗口值。发送方取 cwnd、rwnd 中值小的作为发送窗口。
+	\item 防止接收方缓冲区溢出，确保数据传输的可靠性。
+	\item 与数据链路层比较：
+	\item - 数据链路层：窗口大小不变化、两个相邻节点的流量控制；
+	\item - 传输层：窗口可大小变化，端到端的流量控制。
+\end{itemize}
+
+\paragraph{TCP拥塞控制}
+\begin{itemize}
+	\item 概念：
+	\item - 防止过多的数据注入到网络中。
+	\item - 发送方窗口可等同于拥塞窗口 cwnd（接收方总是有足够大的缓存空间）。
+	\item 两种组合四种算法：慢开始和拥塞避免、快重传和快恢复（对前者的改进）。
+	\item 具体策略：
+	\item - 当发送方检测到超时、TCP 链接建立时，用慢开始和拥塞避免。
+	\item - 当发送方检测到冗余 ACK 时，采用快重传和快恢复。
+	--------------
+	\item 慢开始(slow start)：
+	\item - 先令拥塞窗口 cwnd = 1（mms 最大报文段长度），每收到一个确认后 cwnd 加倍（指数增大），直到达到慢开始门限 ssthresh 值后改用拥塞避免算法。
+	\item 拥塞避免(congestion avoidance)：
+	\item - cwnd 每经过一个 RTT 就增加一个 MSS 大小（线性增大），当出现一次超时就令 cwnd = 1，ssthresh 为出现拥塞时 cwnd 的一半。
+	\item 快重传(fast retransmit)：
+	\item - 发送方连续收到三个冗余 ACK 报文时，直接重传尚未收到的报文段，不必等待那个报文段设置的重传计时器超时。
+	\item 快恢复(fast recovery)：
+	\item - 连续收到三个冗余 ACK，设置 cwnd = 出现拥塞时 cwnd 的一半，ssthresh = 出现拥塞时 cwnd 的一半。然后 cwnd 线性增大。
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f511.png}
+	\includegraphics[width=\textwidth]{images/f512.png}
+	\caption{拥塞控制}
+\end{figure}

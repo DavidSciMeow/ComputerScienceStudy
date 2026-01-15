@@ -1,0 +1,36 @@
+{
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    "latex-workshop.latex.tools": [
+        {
+            "name": "xelatex-builddir",
+            "command": "xelatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-output-directory=build",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "copy-pdf-to-root",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-Command",
+                "Copy-Item -Force 'build\\%DOCFILE%.pdf' '%DOCFILE%.pdf'"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "xelatex (builddir) + copy pdf",
+            "tools": [
+                "xelatex-builddir",
+                "xelatex-builddir",
+                "copy-pdf-to-root"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipe.default": "xelatex (builddir) + copy pdf"
+}

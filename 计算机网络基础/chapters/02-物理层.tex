@@ -1,0 +1,772 @@
+\section{物理层}
+\subsection{数据通信基础}
+\subsubsection{基本概念}
+\begin{itemize}[leftmargin=*]
+	\item 信道：数据传输的媒介，包括物理信道(双绞线、同轴电缆、光纤、无线信道)与逻辑信道(频分复用 FDM、时分复用 TDM、波分复用 WDM)。
+	\item 基带传输：数字信号直接在信道上传输，适用于短距离传输(如以太网)。
+	\item 宽带传输：模拟信号在信道上传输，适用于长距离传输(如有线电视网络)。
+	\item 码元：数字信号的基本单位，每个码元可表示一个或多个比特。
+	\item 码元率：每秒钟传输的码元数，单位为波特(Baud)。码元率与比特率的关系取决于每个码元表示的比特数。
+	\item 信道带宽：信道所能传输的频率范围，单位为赫兹(Hz)。
+	\item 信噪比(SNR)：信号功率与噪声功率的比值，通常以分贝(dB)为单位表示。
+	      \[
+		      \text{SNR}_{\mathrm{dB}} = 10 \log_{10} \left( \frac{S}{N} \right)
+	      \]
+\end{itemize}
+
+\subsubsection{传输方式}
+\begin{itemize}[leftmargin=*]
+	\item 基带传输：数字信号直接在信道上传输，适用于短距离传输(如以太网)。
+	\item 宽带传输：模拟信号在信道上传输，适用于长距离传输(如有线电视网络)。
+	\item 频带传输：将数字信号调制为模拟信号在信道上传输，适用于长距离传输(如电话网络)。
+\end{itemize}
+
+\subsubsection{数据通信基本定理}
+\begin{itemize}[leftmargin=*]
+	\item 香农定理：信道容量 $C$ 与带宽 $B$ 及信噪比 $S/N$ 的关系为：
+	      \[
+		      C = B \log_2(1 + S/N)
+	      \]
+	      其中 $C$ 为信道容量(比特/秒)，$B$ 为信道带宽(赫兹)，$S/N$ 为信噪比。
+
+	\item 奈奎斯特定理：在无噪声信道中，最大数据传输速率 $C$ 与带宽 $B$ 及每码元比特数 $k$ 的关系为：
+	      \[
+		      C = 2B \log_2 M
+	      \]
+	      其中 $M$ 为每码元的离散电平数。
+\end{itemize}
+
+\subsubsection{编码与调制}
+\begin{itemize}[leftmargin=*]
+	\item 编码：将数字信号转换为适合传输的形式。
+	\item 调制：将数字信号转换为模拟信号以适应传输介质。
+	\item 解调：将接收到的模拟信号转换回数字信号的过程。
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/f2.png}
+		\caption{数据与信号转换示意图}
+	\end{figure}
+\end{itemize}
+
+
+
+\subsubsection{编码模式}
+\begin{itemize}[leftmargin=*]
+	\item 非归零编码(NRZ)：信号电平不返回零电平，1 和 0 分别用高电平和低电平表示。
+	\item 归零编码(RZ)：每个码元中间返回零电平，1 和 0 分别用高电平和低电平表示。
+	\item 曼彻斯特编码：每个码元中间有电平跳变，1 由低到高跳变表示，0 由高到低跳变表示。
+	\item 差分曼彻斯特编码：每个码元开始时有电平跳变，1 码元在中间没有跳变，0 码元在中间有跳变。
+	\item 多电平编码：使用多个电平表示多个比特，如 4B/5B 编码、8B/10B 编码等。
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/常用编码.png}
+		\caption{典型的编码模式}
+	\end{figure}
+\end{itemize}
+
+\newpage
+
+\subsubsection{调制模式}
+\begin{itemize}[leftmargin=*]
+	\item 幅移键控(ASK)：通过改变载波的幅度来表示数字信号的 1 和 0。
+	\item 频移键控(FSK)：通过改变载波的频率来表示数字信号的 1 和 0。
+	\item 相移键控(PSK)：通过改变载波的相位来表示数字信号的 1 和 0。
+	\item 脉冲振幅调制(PAM)：通过改变脉冲的幅度来表示数字信号。
+	\item 脉冲位置调制(PPM)：通过改变脉冲的位置来表示数字信号。
+	\item 脉冲宽度调制(PWM)：通过改变脉冲的宽度来表示数字信号。
+	\item 脉冲编码调制(PCM)：将模拟信号采样、量化并编码为数字信号。
+	\item 调幅(AM)：通过改变载波的幅度来传输信息。
+	\item 调频(FM)：通过改变载波的频率来传输信息。
+	\item 调相(PM)：通过改变载波的相位来传输信息。
+	\item 正交振幅调制(QAM)：结合幅度和相位的变化来表示多个比特。
+	      \[
+		      \text{QAM数据传输速率} = \text{波特}*\log_{2} (m_{\text{种相位}}*n_{\text{种幅度}})
+	      \]
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/调制模式.png}
+		\caption{典型的调制模式}
+	\end{figure}
+\end{itemize}
+
+\subsubsection{交换模式}
+\begin{itemize}[leftmargin=*]
+	\item 电路交换：数据传输前，两点建立一条独占的物理通信路径。建立、传输、释放。建立时间最长，传输时延最小。
+	\item 报文交换：数据交换单位为报文，交换节点采用存储转发方式。通信前不需要专门建立通信线路。报文交换对报文大小无限制，网络节点要较大缓存空间。使用在早期的电报通信网中。
+	\item 分组交换：解决报文交换中大报文传输问题，将大数据块切分成小的数据块，加上一些必要的控制信息。分组交换延迟更小，适合计算机间突发式数据通信。
+	\item 虚电路交换：端系统建立连接，会选择一个没用过的虚电路号。分组中有虚电路号，无目的地址。虚电路网络中每个节点维持张虚电路表。必须建立连接，属于同一条虚电路的分组按同一路径转发，保证分组有序到达，可靠的网络保证，某一结点故障均无法工作，差错和流量控制可由分组交换网络或主机保证。
+	\item 数据报交换：不需要建立连接，每个分组有完整目的地址，每个分组独立路由选择和转发，不保证分组的有序到达，不保证通信可靠性（主机来保证），出故障节点丢失分组可由其它路径正常转发，主机进行流量控制。
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f3.png}
+	\caption{交换方式分类示意图}
+\end{figure}
+
+\subsection{传输介质}
+
+\subsubsection{概念}
+\begin{itemize}
+	\item 传输介质是发送设备和接收设备间的物理通路。
+	\item 物理层接口特性：机械特性、电气特性、功能特性、规程特性。
+	\item 传输介质分类：导向传输介质（铜线、光纤等）、非导向传输介质（空气、真空、海水）。
+\end{itemize}
+
+\subsubsection{介质}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f4.png}
+	\caption{传输介质分类示意}
+\end{figure}
+
+\begin{itemize}[leftmargin=*]
+	\item 双绞线：两根绝缘铜线相互缠绕形成，分为非屏蔽双绞线(UTP)和屏蔽双绞线(STP)。常用于局域网和电话系统。
+	\item 同轴电缆：由内导体、绝缘层、外导体和保护层组成，具有较高的带宽和抗干扰能力。常用于有线电视和宽带网络。
+	\item 光纤：利用光信号传输数据，具有极高的带宽和长距离传输能力。分为单模光纤和多模光纤。常用于骨干网和长距离通信。
+	\item 无线传输介质：包括微波、卫星通信、红外线等，适用于移动通信和无法铺设有线的场景。
+	\item 其他介质：如电力线通信、声波通信等，适用于特定环境下的数据传输。
+\end{itemize}
+
+\subsection{物理层设备}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f5.png}
+	\caption{典型的物理层设备分类}
+\end{figure}
+
+\subsection{宽带接入技术和认证方式}
+
+\subsubsection{宽带接入技术}
+\begin{itemize}[leftmargin=*]
+	\item 数字用户线(DSL)：利用现有的电话线传输数字信号，提供高速互联网接入服务。常见类型有 ADSL、SDSL、VDSL 等。
+	\item 有线电视宽带接入：通过有线电视网络提供互联网接入服务，使用 DOCSIS 标准实现数据传输。
+	\item 光纤到户(FTTH)：将光纤直接铺设到用户家中，提供极高的带宽和稳定的连接。
+	\item 无线宽带接入：利用无线技术（如 WiMAX、LTE、5G）提供宽带互联网接入服务，适用于移动用户和偏远地区。
+	\item 卫星宽带接入：通过卫星通信提供互联网接入服务，适用于地理位置偏远或无法铺设有线网络的地区。
+\end{itemize}
+
+\subsubsection{认证方式}
+\begin{itemize}[leftmargin=*]
+	\item 点对点协议(PPP)认证：使用 PAP（密码认证协议）和 CHAP（质询握手认证协议）进行用户身份验证。
+	\item 802.1X 认证：基于端口的网络访问控制协议，常用于无线网络和有线局域网中。
+	\item Web + Portal 认证：用户通过浏览器访问特定的网页进行身份验证，常用于公共 Wi-Fi 热点。
+\end{itemize}
+\newpage
+\section{数据链路层}
+\subsection{数据链路层的功能}
+\subsubsection{为网络层提供的服务}
+\begin{itemize}[leftmargin=*]
+	\item 有确认面向连接服务
+	\item 无确认无连接服务（规定时间没收到确认就重传，适用误码率高的信道，如无线通信）
+	\item 有确认无连接服务（适用于实时通信，误码率低的信道，如以太网）
+\end{itemize}
+
+\subsubsection{链路管理}
+链路的建立、维护、释放，信道的分配与管理。
+
+\subsubsection{帧管理}
+\begin{itemize}[leftmargin=*]
+	\item 帧定界：确定帧的界限。
+	\item 帧同步：分出帧的起始与终止。
+	\item 透明传输：不管传输的是怎样的比特组合，都能在链路上传送。
+\end{itemize}
+
+\subsubsection{流量控制}
+发送方的发送能力大于接收方的接受能力，通过某反馈机制调节（限制发送方的流量）。
+\subsubsection{差错控制}
+在数字通信中利用编码方法对传输中产生的差错进行控制，以提高数字消息传输的准确性。
+
+
+\subsection{组帧}
+\subsubsection{概念}
+发送方依据规则将网络层递交的分组封装成帧，帧要加首部和尾部（分组只是帧的数据部分，所以不需要加尾部）。出错时只重发出错的帧。
+\subsubsection{方法}
+\begin{itemize}[leftmargin=*]
+	\item 字节计数法：在帧首部放一个字节计数字段，表示帧中有多少字节。缺点：如果计数字段出错，接收方无法识别帧界限。
+	\item 标志定界法：在帧的起始和结束处插入特殊的标志字节(01111110)。缺点：如果数据中出现标志字节，需要进行转义处理。
+	\item 比特填充法：在数据中每出现五个连续的 1 后插入一个 0，以防止数据中出现标志序列。接收方在解码时删除这些填充的 0。
+	\item 违规编码法：利用数据中某些比特组合不会出现的特性来标识帧界限。例如，在某些编码方式中，连续的 1 不会超过一定数量，可以利用这一点来定义帧的起始和结束。
+\end{itemize}
+
+\subsection{差错控制}
+\subsubsection{概念}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f6.png}
+	\caption{差错控制概念}
+\end{figure}
+
+\begin{itemize}[leftmargin=*]
+	\item 奇偶校验：在数据中添加一个奇偶校验位，使得数据中 1 的个数为奇数或偶数。接收方通过检查奇偶校验位来检测单比特错误。
+	\item 循环冗余校验(CRC)：对于 m 比特的帧，用生成器生成一个多项式 $G(x)$ ，计算出 $FCS$。若接收方 $G(x)$ 除无余数，则无差错。
+	      \[
+		      \begin{aligned}
+			      \text{发送方(FCS)} = M(x) \cdot x^r + R(x) \\
+			      \text{接收方} = M(x) \cdot x^r \bmod G(x)
+		      \end{aligned}
+	      \]
+	\item 海明码：通过添加冗余位来实现错误检测和纠正。海明码可以检测并纠正单比特错误，检测双比特错误。海明码检错 d 位，需要码距为 d+1；纠错 d 位，需要码距为 2d+1。/ 首先，确定校验位（码字内从左到右编号，2 的幂位为校验位，其余的填入数据）；其次，计算每个数据位影响哪几个校验位，得出校验位由哪几个数据位决定；最后，校验位的值由决定它的数据位中 1 的个数确定，偶数个 1 则校验位值填 0，奇数个填 1。
+\end{itemize}
+
+\subsection{流量控制和可靠传输}
+\subsubsection{概念}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f7.png}
+	\caption{流量控制与可靠传输机制}
+\end{figure}
+注:
+\begin{itemize}
+	\item 通过反馈机制由接收方控制发送方，发送数据的速率。
+	\item 窗口大小为 1，可保证帧的有序接收。
+	\item 帧的编号是循环使用的。
+	\item 数据链路层的滑动窗口协议中，窗口大小在数据传输过程中固定；传输层在数据传输中可变。
+	\item 数据链路层中，流量控制机制和可靠传输机制交织在一起。
+	\item 向后滑动已确认过的帧数（收到确认就向后滑动，接收缓冲区依然为接收窗口大小）。
+	\item 发送方维持一组允许发送的帧序号（发送窗口）。
+	\item 接收方维持一组允许接收的帧序号（接收窗口）。
+	\item 接收方收到数据帧后，将窗口向前移一个位置并发回确认帧（帧落在窗口外则丢弃）。
+\end{itemize}
+
+\subsubsection{三种流量控制机制}
+\begin{itemize}[leftmargin=*]
+	\item 停止—等待（Stop-and-Wait）：
+	      \[
+		      \text{序号} \in \{0,1\},\quad \text{下一个序号} = 1-\text{当前序号}.
+	      \]
+	      超时重传与最小间隔：
+	      \[
+		      t_r = t_{\text{frame}} + T_{\text{timeout}}.
+	      \]
+	      若接收端连续收到相同序号的帧，则为发送端超时重传；发送端连续收到相同序号的确认，则为接收端的重复确认。
+
+	\item 后退 N 帧（Go-Back-N, GBN）：
+	      \[
+		      1 \le W_t \le 2^n-1,\quad n=\text{编号位数}.
+	      \]
+	      设发送窗口为 \(W_t\)，当序号 \(k\) 的定时器超时，重传集合为
+	      \[
+		      \{k,\;k+1,\dots,k+W_t-1\}\pmod{2^n}.
+	      \]
+
+	\item 选择重传（Selective Repeat, SR）：
+	      仅重传出错或超时的帧；接收端可缓存接收到的、但序号不连续的帧（只要序号在接收窗口内）。
+	      窗口约束为
+	      \[
+		      W_{\text{send}} + W_{\text{recv}} \le 2^n.
+	      \]
+	      常用取法：
+	      \[
+		      W_{\text{send}}=W_{\text{recv}}\le 2^{\,n-1},
+	      \]
+	      以避免新旧窗口序号重叠。
+\end{itemize}
+
+\subsubsection{信道利用率与吞吐率}
+设数据长度为 \(L\)（比特），传输速率为 \(C\)（比特/秒），发送到收到确认的周期为 \(T\)（秒）。则发送方有效发送时间为
+\[
+	t_{\mathrm{send}}=\frac{L}{C}.
+\]
+信道利用率（信道效率）
+\[
+	\eta=\frac{\text{有效发送时间}}{\text{发送周期}}=\frac{t_{\mathrm{send}}}{T}=\frac{L/C}{T}.
+\]
+信道吞吐率（单位时间内成功传输的数据量）
+\[
+	S=\eta\cdot C=\frac{L}{T}.
+\]
+
+\subsection{介质访问控制}
+
+\subsubsection{概念}
+解决当局域网中共用信道的使用产生竞争时，如何分配信道的使用权问题。
+
+\subsubsection{常见的介质访问控制方法}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f8.png}
+	\caption{常见的介质访问控制方法}
+\end{figure}
+
+\subsubsection{介质访问控制相关协议详解}
+
+\begin{itemize}[leftmargin=*]
+	\item 时分多路访问(TDMA)：物理信道按时间片分成若干个时间片，轮流分配给多个信号使用（每一时间片由复用的一个信号占用）。STDM 异步时分多路复用，按需分配时隙。
+	\item 频分多路访问(FDMA)：多路基带信号调制到不同频率的载波上，再进行叠加形成一个复合信号（总带宽分割成若干与传输单个信号带宽相同（或略宽，保护频带）的子信道，每个子信道传输一种信号）。
+	\item 波分多路访问(WDMA)：光的频分多路复用。一根光纤中传输多种不同波长（频率）的光信号。
+	\item 码分多路访问(CDMA)：用不同的编码区分各路原始信号。/ 将每比特时间分成 m 个更短的时间槽（芯片）；每个站点指定一个唯一的 m 位代码或芯片序列（发送芯片序列表示 1，发送芯片序列反码表示 0）；两个或多个站点同时发送时，各路数据在信道上线性相加。为信道中分离各路信号，要求站点芯片序列相交正交的。/ 小结：不同站点码片序列正交（规格化内积为 0）、在公共信道上，两个序列是叠加的（线性相加）。
+	\item 纯ALOHA：任何一站点随时发送数据，在一段时间内没收到确认则认为发生冲突，等待一段时间后再发送数据，直到发送成功。
+	\item 时隙ALOHA：将时间划分为若干个时隙，站点只能在时隙开始时发送数据，若在一个时隙内没收到确认则认为发生冲突，等待随机数个时隙后再发送数据。
+	\item 1-坚持 CSMA：在发送数据前监听信道，若信道空闲则发送数据，若信道忙则持续监听直到信道空闲后立即发送数据。
+	\item 非坚持 CSMA：在发送数据前监听信道，若信道空闲则发送数据，若信道忙则等待随机时间后重新监听信道。
+	\item p-坚持 CSMA：在发送数据前监听信道，若信道空闲则发送数据，若信道忙则以概率 p 发送数据，以概率 1-p 等待随机时间后重新监听信道。
+	\item CSMA/CD（有线局域网络）：载波侦听多路访问/碰撞检测（适用于总线型网络，半双工）。/ 先听后发，边听边发（不同于 CSMA 之处），冲突停发，随机重发。/ 用截断二进制指数退避算法，等待一段随机时间（检测到信道忙）。/ 最小帧长：假设某个工作站检测到冲突发生，就发送碰撞信号，使冲突更加明显，使得所有工作站都能检测到总线发生冲突。然后每个想要发送数据的工作站，检测到总线为空，在发送数据之前，先发送一个数据帧（探测帧）。探测帧的长度既要求最快速的到达目的地（尽量小），又要保证探测帧的传递时间足够（发送时间大于所有工作站监测到冲突并发送碰撞的时间）使得其他工作站能够监听到。这个探测帧的长度就是以太网规定的最小帧长。结果就是，如果没有工作站发出碰撞信号打断探测帧的传输，那么就代表总线确实为空，并且没有工作站和“我”争抢总线资源。然后就可以正式发送数据。最小帧长，部分参考链接。/ 考虑如下极限的情况，主机发送的帧很小，而两台冲突主机相距很远。 在主机 A 发送的帧传输到 B 的前一刻，B 开始发送帧。这样，当 A 的帧到达 B 时，B 检测到冲突，于是发送冲突信号。假如在 B 的冲突信号传输到 A 之前，A 的帧已经发送完毕，那么 A 将检测不到冲突而误认为已发送成功。由于信号传播是有时延的，因此检测冲突也需要一定的时间。这也是为什么必须有个最小帧长的限制。/ 小结：最小帧长度在 10Mbps 中为 64B，即发送时间至少为 51.2μs（争用期即 RTT），即 512 bit 时间。发送方必须在发送结束前收到对方的冲突信号。所以发送时间长度至少为 RTT。
+	\item CSMA/CA（无线局域网络）：载波侦听多路访问/碰撞避免（减少碰撞发生的概率）。/ 发送过程中不需要进行冲突检测。
+	\item RTS/CTS 机制：发送方发送 RTS（请求发送）帧，接收方收到后发送 CTS（允许发送）帧，其他站点收到 RTS 或 CTS 后进入网络分配等待状态。
+	\item NAV（网络分配向量）：指示站点在一段时间内不允许发送数据，以避免冲突。
+	\item 令牌传递(Token Passing)：令牌（一组特殊比特组成的帧）在各个结点间按某个固定次序交换，传递通路逻辑上必须是环。有令牌才可发数据。/ 帧在环上传送，每个站点都进行转发，目的站点（会维持一个副本）会在尾部设置响应比特，直到再传到发送站点将此帧撤掉。/ 轮询介质访问控制适合负载很高的广播信道（多点同时发送数据概率很大的信道）。
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f9.png}
+	\caption{CSMA/CA 相关逻辑图}
+\end{figure}
+
+\subsection{局域网}
+
+\subsubsection{概念}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f10.png}
+	\caption{局域网结构示意图}
+\end{figure}
+
+\subsubsection{IEEE 802.3 (局域网参考模型) 以太网}
+
+\begin{itemize}
+	\item LLC 逻辑链路控制：作用已经不大，网卡仅装 MAC 协议，没有 LLC 协议。
+		\\ 与传输媒体无关，向网络层提供服务（面向连接、无确认无连接、有确认无连接）。
+	\item MAC 介质访问控制子层：向上屏蔽物理层访问差异，提供统一的接口。
+		\\ 负责介质访问控制和帧定界、差错检测、流量控制。
+	\item 概念：
+		\\ DIX Ethernet V2 标准与 IEEE 802.3 标准很小差别，因此，将 802.3 局域网简称为以太网。
+		\\ 逻辑上总线型，物理上为星型；信息以广播方式发送；CSMA/CD 对总线访问控制。
+	\item 传输介质 (网卡):
+		\\ 网络适配器或网络接口卡 NIC。工作在数据链路层、物理层。
+		\\ 传输介质间物理连接和电信号匹配，帧发送与接收，帧封装与拆封，介质访问控制、数据编码解码，数据缓存。
+	\item 传输介质 (网线):
+	      \begin{table}[h]
+		      	\centering
+		      	\begin{tabular}{
+				>{\centering\arraybackslash}p{2cm}
+				>{\centering\arraybackslash}p{3.5cm}
+				>{\centering\arraybackslash}p{3.5cm}
+				>{\centering\arraybackslash}p{3.5cm}
+				>{\centering\arraybackslash}p{3cm}
+				}
+				\toprule[1.2pt]
+				参数   & 10BASE5    & 10BASE2    & 10BASE-T    & 10BASE-FL    \\
+				\midrule[0.9pt]
+				传输媒体 & 基带同轴电缆（粗缆） & 基带同轴电缆（细缆） & 非屏蔽双绞线(UTP) & 光纤对（850\,nm） \\
+				编码   & 曼彻斯特编码     & 曼彻斯特编码     & 曼彻斯特编码      & 曼彻斯特编码       \\
+				拓扑结构 & 总线型        & 总线型        & 星形          & 点对点          \\
+				最大段长 & 500\,m     & 185\,m     & 100\,m      & 2000\,m      \\
+				最多结点 & 100        & 30         & 2           & 2            \\
+				\bottomrule[1.2pt]
+			\end{tabular}
+			\caption{10BASEx 系列以太网介质与主要参数比较}
+			\label{tab:10base-comparison}
+		\end{table}
+		\\ 10Base-5 的含义：“10” 代表传播速率为 10Mbps、“Base” 代表 “基带传输”、数字 “5” 表示最大延伸距离接近 500 米，也即 500 米内不需要转接器。
+
+	\item 以太网的 MAC 帧：
+		媒体访问控制地址或 MAC 地址。六个字节（48 bit）十六进制数字表示（如 00-23-5A-15-99-42）；高 24 bit 是厂商代码，低 24 bit 是厂商自行分配。/ 以太网帧格式有 DIX Ethernet V2、IEEE 802.3 标准。/ 广播通信，网卡每收到一个 MAC 帧，硬件检查地址，收下或丢弃。/ 前导码：时钟同步，用于比特同步，MAC 帧无需结束符，因为每个帧间有一定的间隙；类型：指出交给哪个协议实体处理；校验码：目的地址、源地址、类型、数据部分校验（32 位 CRC）。
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=\textwidth]{images/f11.png}
+			\caption{以太网 MAC 帧}
+		\end{figure}
+
+		\begin{table}[h]
+			\centering
+			\begin{tabular}{
+				>{\centering\arraybackslash}p{2.5cm}
+				>{\centering\arraybackslash}p{2.5cm}
+				>{\centering\arraybackslash}p{11cm}
+				}
+			\toprule[1.2pt]
+			字段 & 长度(字节) & 含义 \\
+			\midrule[0.9pt]
+			DMAC & 6 & 目的MAC地址，IPv4为6字节，该字段标识帧的接收者。 \\
+			SMAC & 6 & 源MAC地址，IPv4为6字节，该字段标识帧的发送者。 \\
+			Type & 2 & 协议类型。表1-3列出了链路直接封装的协议类型。 \\
+			Data & 46～1500 & 数据字段，标识帧的负载（可能包含填充位）。数据字段的最小长度必须保证以太帧的总长度至少为64字节，这意味着即使只传输1字节信息，也须使用46字节的数据字段；若实际数据少于46字节，则需用填充字节补足。数据字段的最大长度为1500字节。以太帧的长度必须为整数字节，因此当负载长度不足整数字节时，需进行填充以保证帧长度为整数字节。 \\
+			FCS & 4 & 帧校验序列(FCS, Frame Check Sequence)，接收者用以判断帧在传输过程中是否发生错误。若发现错误则丢弃该帧。FCS通常采用循环冗余校验(CRC)。 \\
+			\bottomrule[1.2pt]
+			\end{tabular}
+			\caption{Ethernet II 以太帧的链路层各字段含义}
+		\end{table}
+
+		\begin{table}[h]
+			\centering
+			\begin{tabular}{
+				>{\centering\arraybackslash}p{2.5cm}
+				>{\centering\arraybackslash}p{2.5cm}
+				>{\centering\arraybackslash}p{11cm}
+				}
+			\toprule[1.2pt]
+			字段 & 长度(字节) & 含义 \\
+			\midrule[0.9pt]
+			帧间隙 & 至少12 & 每个以太帧之间必须有帧间隙(Inter Frame Gap，IFG)，即发送完一个帧后需等待一段时间才能发送下一个帧，以便接收端完成必要的处理（如帧接收处理、统计更新等）。以太网标准规定最小帧间隙为12字节（96位）。对某些高速接口（例如部分 GE/10GE 实现）该值可缩短至对应的位数，但一般接口不应小于12字节。 \\
+			前同步码 & 7 & 前导码(Preamble)，用于比特同步。以太网规定前导码为7字节的模式10101010重复序列（即每字节为0x55，二进制为10101010），用于接收端锁相并建立比特/字节同步。 \\
+			帧开始定界符 & 1 & 帧开始定界符(SFD, Start Frame Delimiter)，以太网规定为10101011（二进制，即0xD5），共1字节，用以标识帧的实际起始位置。 \\
+			\bottomrule[1.2pt]
+			\end{tabular}
+			\caption{Ethernet II 以太帧的物理层各字段含义}
+		\end{table}
+
+		\begin{table}[h]
+			\centering
+			\begin{tabular}{
+				>{\centering\arraybackslash}p{2.5cm}
+				>{\centering\arraybackslash}p{14cm}
+				}
+				\toprule[1.2pt]
+				值 & 协议 \\
+				\midrule[0.9pt]
+				0x0800 & Internet Protocol Version 4 (IPv4) \\
+				0x0801 & X.75 Internet \\
+				0x0805 & X.25 Level 3 \\
+				0x0806 & Address Resolution Protocol (ARP) \\
+				0x0808 & Frame Relay ARP \\
+				0x22F3 & TRILL \\
+				0x22F4 & L2-IS-IS \\
+				0x6558 & Trans Ether Bridging \\
+				0x6559 & Raw Frame Relay \\
+				0x8035 & Reverse Address Resolution Protocol (RARP) \\
+				0x809b & Appletalk \\
+				0x8100 & IEEE Std 802.1Q - Customer VLAN Tag Type (C-Tag, formerly called the Q-Tag) \\
+				0x8137 & Novell NetWare IPX/SPX (old) \\
+				0x8138 & Novell, Inc. \\
+				0x814C & SNMP over Ethernet \\
+				0x86DD & IP Protocol version 6 (IPv6) \\
+				0x876B & TCP/IP Compression \\
+				0x876C & IP Autonomous Systems \\
+				0x876D & Secure Data \\
+				0x8808 & IEEE Std 802.3 - Ethernet Passive Optical Network (EPON) \\
+				0x880B & Point-to-Point Protocol (PPP) \\
+				0x880C & General Switch Management Protocol (GSMP) \\
+				0x8847 & MPLS (multiprotocol label switching) \\
+				0x8848 & MPLS with upstream-assigned label \\
+				0x8863 & PPP over Ethernet (PPPoE) Discovery Stage \\
+				0x8864 & PPP over Ethernet (PPPoE) Session Stage \\
+				0x888E & IEEE Std 802.1X - Port-based network access control \\
+				0x88A8 & IEEE Std 802.1Q - Service VLAN tag identifier (S-Tag) \\
+				0x88B7 & IEEE Std 802 - OUI Extended Ethertype \\
+				0x88C7 & IEEE Std 802.11 - Pre-Authentication (802.11i) \\
+				0x88CC & IEEE Std 802.1AB - Link Layer Discovery Protocol (LLDP) \\
+				0x88E5 & IEEE Std 802.1AE - Media Access Control Security \\
+				0x88F5 & IEEE Std 802.1Q - Multiple VLAN Registration Protocol (MVRP) \\
+				0x88F6 & IEEE Std 802.1Q - Multiple Multicast Registration Protocol (MMRP) \\
+				0x893B & TRILL Fine Grained Labeling (FGL) \\
+				0x8946 & TRILL RBridge Channel \\
+				\bottomrule[1.2pt]
+			\end{tabular}
+			\caption{常见 Type 值对应的协议}
+			\label{tab:ethertypes}
+		\end{table}
+
+	\newpage
+
+	\item 高速以太网（大于等于 100Mbps）
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=\textwidth]{images/f12.png}
+			\caption{高速以太网}
+		\end{figure}
+
+\end{itemize}
+
+\subsubsection{IEEE 802.11 (局域网参考模型) 以太网}
+
+\begin{itemize}
+	\item 概念：
+	MAC 采用 CSMA/CD 协议进行介质访问控制。/ 先监听信道，空闲发送，否则用截断二进制指数退避算法推迟（信道为空且为第一个帧时不用此算法）；收到 ACK 说明成功，否则重发。/ 注：发生碰撞也把整个帧发完，有线局域网中发生冲突立即停止发送数据。
+	\item 有固定设施：
+	802.11 规定无线局域网最小构件为基本服务集（一个基站 AP，若干个移动站点）。
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/f13.png}
+		\caption{802.11 固定设施网络模式图}
+	\end{figure}
+	\item 无固定设施（无线局域网自组织网络）：
+	自组织网络没有基本服务集中 AP。各点间地位平等，中间信点都为转发结点。
+\end{itemize}
+
+\subsubsection{令牌环}
+\begin{itemize}
+	\item 逻辑上为环形拓扑结构，物理上为星形拓扑结构。
+	\item 令牌传递介质访问控制方式。
+	\item 令牌环工作站按顺序连接成一个逻辑环，令牌在环上按固定方向传递。
+	\item 有令牌才可发送数据，发送完后释放令牌。
+	\item 令牌丢失或损坏时，由监视站产生新令牌。
+	\item 令牌环网卡有两种工作模式：
+	\begin{itemize}
+	\item \textbf{插入模式}（正常模式，接收到令牌后插入数据并发送）
+	\item \textbf{旁路模式}（故障模式，站点出现故障时自动切换到旁路模式，使得环路不中断）。
+	\end{itemize}
+\end{itemize}
+
+\subsection{广域网}
+\subsubsection{概念}
+\begin{itemize}
+	\item 覆盖范围很广的长距离网络，是因特网的核心部分。
+	\item 广域网是单一的网络，不等同于互联网。
+	\item 使用结点交换机连接各个主机或路由器。
+	\item 广域网与局域网二者平等（互联网角度看）。
+	\item 路由器用来连接不同的网络。
+	\item 广域网由结点交换机组成（单个网络中转发分组），互联网由路由器组成（多个网络中转发分组）。
+	\item PPP、HDLC 是广域网最常见的数据链路层控制协议。
+	\begin{figure}[h]
+		\centering
+		% \includegraphics[width=\textwidth]{images/x.png}
+		\caption{典型的广域网拓扑}
+	\end{figure}
+\end{itemize}
+
+\subsection{PPP协议}
+\subsubsection{概念}
+点对点协议（PPP, Point-to-Point Protocol）是PPP 在 SLIP（串行线路网际协议）基础上发展而来。SLIP 主要完成数据报的传送，只能传送 IP 分组。/ PPP 特性：异步、同步线路上使用；点对点协议，不是总线型，不需要 CSMA/CD；只支持全双工链路；不可靠传输协议，只保证无差错接收，不纠错，也不使用序号和确认机制；PPP 两端可运行不同网络协议；PPP 是面向字节的，异步线路（默认）用字节填充法、同步线路（SONET、SDH 等）用硬件比特填充。
+
+\subsubsection{PPP帧}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/f14.png}
+		\caption{PPP帧格式}
+	\end{figure}
+
+	\begin{table}[h]
+    \centering
+    \begin{tabular}{
+        >{\centering\arraybackslash}p{2.5cm}
+        >{\centering\arraybackslash}p{3cm}
+        p{11cm}
+    }
+        \toprule
+        协议字段 (Hex) & 协议名 & 说明 \\
+        \midrule
+        0xC021 & LCP    & Link Control Protocol（链路控制协议） \\
+        0xC023 & PAP    & Password Authentication Protocol（明文口令认证） \\
+        0xC223 & CHAP   & Challenge-Handshake Authentication Protocol（质询握手认证） \\
+        0x80xy & NCP 系列 & Network Control Protocols（网络控制协议系列） \\
+        0x8021 & IPCP   & IP Control Protocol（用于 IPv4 参数协商） \\
+        0x8057 & IPv6CP & IPv6 Control Protocol（用于 IPv6 参数协商） \\
+        0x0021 & IP     & IPv4 数据承载 \\
+        0x0029 & AppleTalk & AppleTalk 承载 \\
+        0x002B & IPX    & IPX/SPX 承载 \\
+        0x003D & Multilink & Multilink PPP（多链路聚合） \\
+        0x003F & NetBIOS & NetBIOS over PPP \\
+        0x00FD & MPPC / MPPE & Microsoft 压缩/加密（MPPC/MPPE） \\
+        \bottomrule
+    \end{tabular}
+    \caption{PPP 帧 Protocol/Type 字段常见值}
+    \label{tab:ppp-protocols}
+\end{table}
+
+\subsubsection{PPP组成部分}
+\begin{itemize}
+	\item 链路控制协议 (LCP)：建立、配置、测试数据链路连接。
+	\item 认证协议：验证对端身份。
+	\begin{itemize}
+		\item 明文口令认证协议 (PAP)：使用明文口令进行身份验证，安全性较低。
+		\item 质询握手认证协议 (CHAP)：通过质询和响应机制进行身份验证，安全性较高。
+	\end{itemize}
+	\item 网络控制协议 (NCP)：为不同的网络层协议（如 IP、IPX）配置和管理网络层参数。
+\end{itemize}
+
+\subsubsection{状态}
+当用户 PC 机拨号接入 ISP 后，就建立了一条从用户 PC 机到 ISP 的物理连接，这时，用户 PC 机向 ISP 发送一序列的 LCP 分组，封装成 PPP 帧，以便建立 LCP 连接。这些分组及其响应选择了将要使用的一些 PPP 参数。接着还要进行网络层配置，NCP 给新接入的用户 PC 机分配了一个临时的 IP 地址，这样，用户 PC 机就称为了因特网上的一个有 IP 地址的主机了。当用户通信完毕后，NCP 释放网络层的连接，回收原来分配出去的IP地址，接着，LCP 释放数据链路层连接，最后释放的是物理层的连接。
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/PPP状态.png}
+	\caption{PPP状态图例}
+\end{figure}
+
+\subsubsection{PPP透明传输问题}
+\begin{itemize}
+	\item 当 PPP 用在异步传输时，就使用一种特殊的字符填充法。
+	\item 当 PPP 用在同步传输链路时，协议规定采用硬件来完成比特填充（和 HDLC 的做法一样）。
+	\item 同步传输的单位就是一个帧 ，这个帧有开始定界符和结束定结符
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=.75\textwidth]{images/PPP帧定界_同步传输.png}
+		\caption{PPP同步传输}
+	\end{figure}
+	\item 异步传输
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=.75\textwidth]{images/PPP帧定界_异步传输.png}
+		\caption{PPP异步传输}
+	\end{figure}
+
+	\item 字符填充法
+	\\ 将信息字段中出现的每一个 0x7E 字节转变成为 2 字节序列 (0x7D, 0x5E)。
+	\\ 若信息字段中出现一个 0x7D 的字节, 则将其转变成为 2 字节序列 (0x7D, 0x5D)。
+	\\ 若信息字段中出现 ASCII 码的控制字符（即数值小于 0x20 的字符），则在该字符前面要加入一个 0x7D 字节，同时将该字符的编码加以改变。
+
+	\item 零比特填充法
+	\\ PPP 协议用在 SONET/SDH 链路时，使用同步传输（一连串的比特连续传送）。这时 PPP 协议采用零比特填充方法来实现透明传输。
+	\\ 在发送端，只要发现有 5 个连续 1，则立即填入一个 0。
+	\\ 接收端对帧中的比特流进行扫描。每当发现 5 个连续1时，就把这 5 个连续 1 后的一个 0 删除。
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/PPP零比特填充.png}
+		\caption{PPP零比特填充}
+	\end{figure}
+
+	\item PPP不提供使用序号和确认的可靠传输 (原因)
+	\\ 在数据链路层出现差错的概率不大时，使用比较简单的 PPP 协议较为合理。
+	\\ 在因特网环境下，PPP 的信息字段放入的数据是 IP 数据报。数据链路层的可靠传输并不能够保证网络层的传输也是可靠的。
+	\\ 帧检验序列 FCS 字段可保证无差错接受。
+
+\end{itemize}
+	 
+
+\subsection{HDLC协议}
+\subsubsection{概念}
+高级数据链路控制协议。
+\\ 面向比特；0 比特插入法；
+\\ 全双工通信；所有帧采用 CRC 检验，对信息帧进行顺序编号。
+
+\subsubsection{HDLC工作原理}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f15.png}
+	\caption{HDLC工作原理}
+\end{figure}
+
+\subsection{HDLC帧结构}
+\begin{itemize}
+	\item HDLC使用统一的帧结构进行同步传输。HDLC由6个字段组成，两端以标志字段（F）作为帧的边界，信息字段（INFO）则包含要传输的数据。HDLC从头到尾各字段如下：
+	\item 帧标识F：8位，边界标识位模式为01111110。为避免帧中间出现位模式01111110导致帧错位，HDLC采用位填充技术（零比特插入法），以达到透明传输的目的。
+	\item 地址字段A：8位，可扩展，扩展地址字段为8的整数倍。字段A用于标志从站地址，适用于点对多点链路配置。
+	\item 控制字段C：8位，可扩展，扩展的控制字段为16位。该字段是HDLC的关键，主要用于区分不同的帧格式、帧的轮询和终止等。具体功能结合下文帧结构来分析。
+	\item 信息字段INFO：长度没有规定，只有I帧和某些U帧结含有信息字段。
+	\item 帧校验序列FCS：FCS 中含有各个字段的校验（标志字段除外），一般采用CRC-16产生的16位校验序列，有时也采用CRC-32产生的32位。
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/f16.png}
+	\caption{典型HDLC帧结构}
+\end{figure}
+
+\newpage
+
+\subsection{HDLC帧类型}
+\begin{itemize}
+	\item 按照功能（由控制字段C来实现），HDLC定义了三种帧，分别是：
+	\item 信息帧（I帧）：功能是承载用户数据，捎带流量控制、差错控制的应答信号。
+	\item 信息帧的控制字段第1位为0；
+	\item 2、3、4位为帧的编号N（S），表示当前发送帧的编号,使接收方能够正确识别，所接收的帧及帧的顺序;
+	\item 第5位为是P/F位，即轮询/终止(Poll/Final)位，表示信息传输的状态。
+	\item 6、7、8位为N（R），表示N(R)以前的各帧已正确接收,通知发送方，希望接收下一帧为第 N(R)帧。比如,N（R）=7，表示7号帧以前的帧都已经接收到，下一帧要接收的是7号帧。
+	\item 管理帧（S帧）：用于流量和差错控制。S帧以控制字段第1、2位为“10”来标志。S帧的控制字段的第3、4位为S帧类型编码SS，共有四种不同编码，分别表示：
+	\item 00接收就绪(RR)：01拒绝(REJ)；10接收未就绪(RNR)；11选择拒绝(SREJ)。
+	\item 无编号帧（U帧）：因其控制字段中不包含编号N(S)和N(R)而得名，U帧用于提供对链路的建立、拆除以及多种控制功能。
+	\item U帧控制字段的1、2位为“11”；3、4、6、7、8为5个M位(M1、M2、M3、M4、M5，也称修正位)，可以定义32种附加的命令功能，目前仅有18种功能。典型M位功能有初始化SIM、拆除连接DISC、无编号应答UA、设置传输模式为异步平衡方式SABM等。
+\end{itemize}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{
+		>{\centering\arraybackslash}p{4cm}
+        >{\centering\arraybackslash}p{4cm}
+        >{\centering\arraybackslash}p{4cm}
+		>{\centering\arraybackslash}p{4cm}
+		}
+        \toprule
+        特性/协议 & HDLC & PPP & 以太网 \\
+        \midrule
+        适用场景   & 点对点通信 & 点对点通信 & 多点通信 \\
+        透明传输   & 支持       & 支持       & 不支持 \\
+        错误检测   & CRC-16     & CRC-16     & CRC-32 \\
+        开销       & 低         & 较低       & 较高 \\
+        可靠性     & 高         & 高         & 低 \\
+        面向       & 面向比特   & 面向字节   & 面向字节 \\
+        协议字段   & 无额外协议字段或由控制域区分 & 比 HDLC 多 2 字节的 Protocol/Type 字段 & 存在 2 字节的 Type/Length 字段 \\
+        序号与确认 & 使用编号与确认，支持可靠传输 & 不使用序号/确认，仅保证无差错接收 & 无（由上层保证） \\
+        标准化/归属 & ISO 提出（非 TCP/IP 系列） & RFC / 常用于 TCP/IP 环境 & IEEE 802.3 \\
+        \bottomrule
+    \end{tabular}
+    \caption{HDLC、PPP 与以太网比较表}
+    \label{tab:hdlc-ppp-eth}
+\end{table}
+
+\newpage
+
+\subsection{数据链路层设备}
+
+\subsubsection{概述}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/数据链路层设备.png}
+	\caption{数据链路层设备}
+\end{figure}
+
+\subsubsection{网桥}
+\begin{itemize}
+	\item 概念：
+	\begin{itemize}
+		\item 通过网桥连接多个以太网，使每个网段成为隔离开的冲突域（碰撞域）。
+		\item 网桥连接起来若干网段最大吞吐量为 N 个网段之和，而处于同一冲突域的仍为原来的。
+	\end{itemize}
+	\item 特点：
+	\begin{itemize}
+		\item 以目的网络的介质访问协议发帧。
+		\item 网桥在不同或同类型的 LAN 间存储转发、协议转换。
+		\item 可帧翻译互联不同类型的局域网。
+		\item 网桥有足够大的缓冲空间。
+	\end{itemize}
+	\item 透明网桥：
+	\begin{itemize}
+		\item 混杂方式工作，接收与之连接的所有 LAN 的每一帧。
+		\item 其路由选择取决于源 LAN、目的 LAN（相同丢弃；不同转发；未知扩散）。
+		\item 自学习算法处理收到的帧（端口与地址），使用生成树防止环路（生成树一般不是最佳路由）。
+	\end{itemize}
+	\item 源路由网桥：
+	\begin{itemize}
+		\item 路由选择由发送数据帧的源站负责。
+		\item 源站发送发现帧，从多个途径到达目的站，目的站发应答帧，将途径网桥的标记记录在应答帧中，最终选出最佳路由（往返时间最短）。
+		\item 发现帧数量可能会指数增加，导致拥塞。
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{局域网交换机}
+\begin{itemize}
+    \item 概念：
+          \begin{itemize}
+              \item 桥接器在任意时刻只能执行一个帧的转发操作，隔离冲突域。
+              \item 以太网交换机是一个多端口的网桥，工作在数据链路层（第二层）。既能隔离冲突域，也能隔离广播域。
+              \item 交换机可方便实现虚拟局域网（VLAN）；不同 VLAN 之间的通信需通过三层设备（路由器或三层交换机）实现。
+          \end{itemize}
+
+    \item 原理：
+          \begin{itemize}
+              \item 交换机学习并维护端口—MAC 地址表：检测到端口收到帧时记录源 MAC 与端口映射；转发时查表匹配目的 MAC，向对应端口转发，若未知则泛洪。
+          \end{itemize}
+
+    \item 特点：
+          \begin{itemize}
+              \item 每个端口通常连接单个主机（与传统网桥相异），减少碰撞域。
+              \item 多数端口支持全双工，允许同时收发，消除冲突。
+              \item 即插即用，自学习建立转发表，转发效率高。
+          \end{itemize}
+
+    \item 两种交换模式：
+          \begin{itemize}
+              \item 直通式（cut-through）：只检查目的地址即转发，延迟低、速度快，但不检测帧错误，且不支持不同速率端口间的完整适配。
+              \item 存储转发式（store-and-forward）：接收完整帧并验证 FCS 后再转发，能支持不同速率端口交换并过滤错误帧，但转发延迟较大。
+          \end{itemize}
+
+    \item 网桥与交换机：
+          \begin{itemize}
+              \item 交换机是多端口的网桥（交换式集线器的演进），用于互连相同类型的 LAN（如以太网）。
+              \item 主要区别：交换机端口更多、并行转发能力强、吞吐率高且通常支持全双工与更丰富的功能（VLAN、端口安全、速率限流等）。
+          \end{itemize}
+\end{itemize}
+
+\subsubsection{总结}
+\begin{itemize}
+	\item 以太网采用无连接工作方式，不对帧编号。不可靠、尽最大努力交付。
+	\item 局域网工作于一、二层；广域网工作于下三层。
+	\item 放大器加强宽带信号（传输模拟信号）；中继器加强基带信号（传输数字信号），大多数以太网采用基带传输。
+	\item 物理层：信号编码、译码、比特的接收和传输。
+	\item MAC 子层：组帧、拆帧、比特差错检测、寻址、竞争处理。
+	\item LLC 子层：建立释放数据链路层逻辑连接，提供与高层的接口、差错控制、给帧加序号。
+	\item MAC 子层没有流量控制机制。流量控制要编号机制，对于这个的实现在 LLC 子层。
+\end{itemize}

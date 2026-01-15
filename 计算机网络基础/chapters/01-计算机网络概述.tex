@@ -1,0 +1,192 @@
+\section{计算机网络概述}
+\subsection{概述}
+\subsubsection{计算机网络概念}
+\begin{enumerate}
+	\item 计算机网络组成：
+	      \begin{itemize}
+		      \item 组成部分：硬件、软件、协议。
+		      \item 工作方式：边缘部分(主机)、核心部分(路由器)。
+		      \item 功能组成：通信子网(下三层)、资源子网(应用层)。
+	      \end{itemize}
+
+	\item 计算机网络分类：
+	      \begin{itemize}[leftmargin=*]
+		      \item 按分布范围：广域网 WAN(用交换技术)、城域网 MAN、局域网 LAN(用以太技术，MAN 也并入局域网讨论)、个人区域网 PAN。
+		      \item 按传输技术：点对点网络(交换技术、分组转发与路由选择机制)；广播网络(以太技术，联网计算机共享一个公共通信信道。)
+		      \item 按拓扑：总线形网络、环形网络、星形网络、网状形网络。
+		      \item 按使用者：公用网络(电信公司建网)、专用网络(某部门/本单位)。
+		      \item 按交换技术：电路交换、报文交换、分组交换。
+	      \end{itemize}
+
+	\item 标准化工作：
+
+	      因特网所有标准都以 RFC (Request for Comments/请求意见稿) 形式在因特网上发布。
+\end{enumerate}
+
+\bigskip
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[node distance=2cm, every node/.style={font=\small}]
+		\coordinate (col) at (0,0);
+		\node[draw, rectangle, anchor=west] (proposed)  at ($(col)+(2.4,0.9)$)  {建议标准};
+		\node[draw, rectangle, anchor=west] (draft)     at ($(col)+(2.4,0.0)$)  {因特网草案};
+		\node[draw, rectangle, anchor=west] (draftstd)  at ($(col)+(2.4,-0.9)$) {草案标准};
+		\node[draw, rectangle, anchor=west] (internetstd) at ($(col)+(2.4,-1.8)$) {因特网标准};
+
+		\coordinate (bracetop)    at ($(proposed.north west)+(-0.1,0.25)$);
+		\coordinate (bracebottom) at ($(internetstd.south west)+(-0.1,-0.25)$);
+		\coordinate (bracemid)    at ($(bracetop)!0.5!(bracebottom)$);
+
+		\node[draw, rectangle, fill=blue!20, anchor=east] (center) at ($(bracemid)+(-0.4,0)$) {标准化工作};
+
+		\draw[decorate,decoration={brace,amplitude=6pt,mirror}] (bracetop) -- (bracebottom);
+
+		\node[anchor=west] at ($(draft.east)+(0.8,0)$) {(此阶段不是 RFC 文档)};
+		\node[anchor=west] at ($(draftstd.east)+(0.8,0)$) {RFC 文档};
+	\end{tikzpicture}
+	\caption{互联网标准化工作流程示意图}
+	\label{fig:standardization-workflow}
+\end{figure}
+
+\subsubsection{性能指标}
+\begin{itemize}[leftmargin=*]
+	\item \textbf{带宽：} 通信领域指通信线路允许通过的信号频带范围；计算机网络领域指通信线路所能传送数据的能力(最高数据率)。
+	\item \textbf{时延：} 数据从网络一端到另一端的总时间。包括发送时延(传输时延，总时延中主要减少此时延，等于分组长度与信道带宽之比，即 $L/R$)、传播时延、排队时延、处理时延。
+	\item \textbf{时延带宽积：} 等于传播时延与信道带宽的乘积，即 $\text{时延带宽积}=d_{\mathrm{prop}}\times B$，表示管道中可容纳的比特数。
+	\item \textbf{往返时延(RTT)：} 从发送端开始发送数据，到收到接收端发送的确认为止的总时间。
+	\item \textbf{吞吐量：} 单位时间内通过某个网络或链路传输的数据量。
+	\item \textbf{速率：} 数字信道上传送数据的速率(例如比特每秒)。
+	\item \textbf{利用率：} 信道利用率表示某信道在百分之几的时间内有数据通过；网络利用率为全网络信道利用率的加权平均值。简单公式描述：
+	      \[
+		      D=\frac{D_0}{1-U},
+	      \]
+	      其中 $D$ 为当前时延，$D_0$ 为空闲时的时延，$U$ 为网络利用率。当 $U$ 接近 $1$(例如超过 $0.5$)时，会产生显著的时延增加。
+\end{itemize}
+
+\subsection{计算机网络体系结构和参考模型}
+
+\subsubsection{计算机网络分层结构}
+\begin{itemize}
+	\item 体系结构：计算机网络各层及其协议的集合(体系结构是抽象的，实现是具体的)。
+	\item 最底层是上一层服务的提供者；最高层是下一层服务的使用者；中间层是下一层服务的使用者，是上一层服务的提供者。
+	\item 各层次中，每个报文、协议数据单元 PDU 都由两部分组成：协议控制信息 PCI、服务数据单元 SDU。
+\end{itemize}
+
+\subsubsection{协议、接口、服务的概念}
+\begin{itemize}
+	\item 协议：为进行数据交换而建立的规则集合。协议是水平的。
+	\item 接口：同节点内相邻层交换信息的连接点。通过服务访问点 SAP 进行交互。
+	\item 服务：下层为相邻上层提供的功能调用。服务是垂直的。服务原语(A 到 B, n+1 层到 n 层间)：请求、指示、响应、应答。
+\end{itemize}
+
+\subsubsection{计算机网络提供的服务分类}
+\begin{itemize}
+	\item 面向连接服务：建立连接、数据传输、连接释放(例如 TCP)。
+	\item 无连接服务：需要时直接发送，不保持连接(例如 IP、UDP)。
+	\item 可靠服务：保证数据正确、可靠传到目的地；不可靠服务：不保证可靠性，需上层或应用保证。
+	\item 有应答服务：接收方收到数据后向发送方发应答；无应答则需高层实现应答机制。
+\end{itemize}
+
+\subsubsection{ISO 的 OSI 参考模型}
+\paragraph{ISO (International Standardization Organization / 国际标准化组织) 的 OSI (Open System Interconnection / 开放系统互连) 参考模型}
+\bigskip
+\begin{center}
+	\begin{tikzpicture}[every node/.style={font=\small}, line width=0.8pt]
+		\node[draw, rectangle, fill=blue!60, rounded corners, text=white, minimum width=2.8cm, minimum height=1cm] (center) {OSI 七层};
+
+		\node[draw, rectangle, fill=gray!10, rounded corners] (app)       at ($(center)+(4.0,2.4)$) {应用层};
+		\node[draw, rectangle, fill=gray!10, rounded corners] (pres)      at ($(center)+(4.0,1.6)$) {表示层};
+		\node[draw, rectangle, fill=gray!10, rounded corners] (sess)      at ($(center)+(4.0,0.8)$) {会话层};
+		\node[draw, rectangle, fill=gray!10, rounded corners] (tran)      at ($(center)+(4.0,0.0)$) {传输层};
+		\node[draw, rectangle, fill=gray!10, rounded corners] (net)       at ($(center)+(4.0,-0.8)$) {网络层};
+		\node[draw, rectangle, fill=gray!10, rounded corners] (datalink)  at ($(center)+(4.0,-1.6)$) {数据链路层};
+		\node[draw, rectangle, fill=gray!10, rounded corners] (phy)       at ($(center)+(4.0,-2.4)$) {物理层};
+
+		\draw[->] (center) to[out=30,in=180]  (app);
+		\draw[->] (center) to[out=20,in=180]  (pres);
+		\draw[->] (center) to[out=10,in=180]  (sess);
+		\draw[->] (center) to[out=0, in=180]  (tran);
+		\draw[->] (center) to[out=-10,in=180] (net);
+		\draw[->] (center) to[out=-20,in=180] (datalink);
+		\draw[->] (center) to[out=-30,in=180] (phy);
+
+		\draw[decorate,decoration={brace,amplitude=6pt}]
+		($(app.north east)+(0.5,0.2)$) -- ($(sess.south east)+(0.5,-0.2)$)
+		node[midway,right=10pt,align=left] {资源子网\\(数据处理 / 计算机系统)};
+
+		\draw[decorate,decoration={brace,amplitude=6pt}]
+		($(tran.north east)+(0.4,0.12)$) -- ($(tran.south east)+(0.4,-0.12)$)
+		node[midway,right=10pt,align=left] {桥梁作用};
+
+		\draw[decorate,decoration={brace,amplitude=6pt}]
+		($(net.north east)+(0.5,0.2)$) -- ($(phy.south east)+(0.5,-0.2)$)
+		node[midway,right=10pt,align=left] {通信子网\\(数据传输 / 通信设备)};
+	\end{tikzpicture}
+\end{center}
+
+\begin{itemize}[leftmargin=*]
+	\item OSI 七层(由上至下)：应用层、表示层、会话层、传输层、网络层、数据链路层、物理层。
+	\item \textbf{应用层：} 用户与网络的接口，最复杂的一层，协议最多。常见协议：FTP、SMTP、HTTP 等。
+	\item \textbf{表示层：} 两个通信系统交换信息的表示方式(如数据压缩、加密、解密等)。
+	\item \textbf{会话层：} 建立并管理主机间各进程之间的会话(建立、管理、终止会话)。
+	\item \textbf{传输层：} 为端到端(进程到进程)提供通信，端口号标识端点。向端到端连接提供流量控制、差错检测、服务质量、数据分段与重组等。典型协议有 TCP、UDP。
+	\item \textbf{网络层：} 为点到点(主机到主机)提供通信，使用 IP 地址标识主机；负责分组的路由选择、流量控制与拥塞控制、差错控制、分组转发。常见协议：IP、ICMP、IGMP、ARP、RARP、OSPF(主要为无连接的网际协议、路由选择协议)。
+	\item \textbf{数据链路层：} 包括 MAC (介质访问控制子层)与 LLC (逻辑链路控制子层)；负责帧封装、差错检测、流量控制与链路管理。相关协议/技术有 SDLC、HDLC、PPP、STP、帧中继(Frame Relay)等。
+	\item \textbf{物理层：} 定义传输介质上的电气、机械、过程与功能特性：比特的物理表示、接口、连接器、传输速率。如 DTE/DCE 设备、数据通信设备 DCE，物理和逻辑连接方法。常见标准：EIA-232C、EIA/TIA RS-449、CCITT X.21 等。
+\end{itemize}
+
+\subsubsection{TCP/IP 模型}
+
+\begin{center}
+	\begin{tikzpicture}[node distance=1.2cm, every node/.style={font=\small}]
+		\node[draw,rectangle,rounded corners,fill=blue!60,text=white,minimum width=3.2cm,minimum height=8mm] (core) {TCP/IP 模型};
+		\node[draw,rectangle,rounded corners,fill=gray!10] (app)   [right=2.2cm of core,yshift=1.8cm] {应用层};
+		\node[draw,rectangle,rounded corners,fill=gray!10] (trans) [right=2.2cm of core,yshift=0.6cm] {传输层};
+		\node[draw,rectangle,rounded corners,fill=gray!10] (inet)  [right=2.2cm of core,yshift=-0.6cm] {网际层};
+		\node[draw,rectangle,rounded corners,fill=gray!10] (link)  [right=2.2cm of core,yshift=-1.8cm] {网络接口层};
+
+		\draw[-{Stealth}] (core.east) to[out=10,in=180]  (app.west);
+		\draw[-{Stealth}] (core.east) to[out=0, in=180]  (trans.west);
+		\draw[-{Stealth}] (core.east) to[out=-10,in=180] (inet.west);
+		\draw[-{Stealth}] (core.east) to[out=-20,in=180] (link.west);
+	\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+	\item TCP/IP 四层(由上至下)：应用层、传输层、网际层、网络接口层。
+	\item \textbf{应用层：} 提供各种网络应用服务，如 FTP、SMTP、HTTP 等。
+	\item \textbf{传输层：} 提供端到端的通信服务，主要协议有 TCP(面向连接、可靠传输)与 UDP(无连接、不可靠传输)。
+	\item \textbf{网际层：} 负责数据包的路由选择与转发，主要协议为 IP(无连接、不可靠传输)、ICMP(差错报告与诊断)、ARP(地址解析)等。
+	\item \textbf{网络接口层：} 负责数据在物理网络上的传输，涵盖数据链路层与物理层的功能。
+\end{itemize}
+
+\subsubsection{两种模型的不同点}
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{
+		>{\centering\arraybackslash}p{4.5cm}
+		>{\centering\arraybackslash}p{5.5cm}
+		>{\centering\arraybackslash}p{5.5cm}
+		}
+		\toprule[1.2pt]
+		比较点  & OSI 模型        & TCP/IP 模型      \\
+		\midrule[0.9pt]
+		性质   & 理论模型          & 实际应用模型         \\
+		层数   & 七层 / 五层       & 四层             \\
+		设计取向 & 强调标准化与互操作性    & 强调实用性与灵活性      \\
+		功能划分 & 各层功能划分较细      & 各层功能较为综合       \\
+		应用情况 & 较少用于实际网络设计    & 互联网的基础         \\
+		制定者  & 国际标准化组织 (ISO) & 起源于美国国防部 (DOD) \\
+		\bottomrule[1.2pt]
+	\end{tabular}
+	\caption{OSI 与 TCP/IP 模型的比较}
+\end{table}
+
+\subsubsection{各层使用的PDU}
+\begin{itemize}[leftmargin=*]
+	\item 物理层：比特(Bit)。
+	\item 数据链路层：帧(Frame)。
+	\item 网络层：分组/包(Packet)。
+	\item 传输层：段(Segment)。
+	\item 应用层：报文(Message)。
+\end{itemize}

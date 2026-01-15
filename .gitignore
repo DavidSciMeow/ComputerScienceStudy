@@ -1,0 +1,7 @@
+indent.log
+build/
+*.log
+*.toc
+*.gz
+*.aux
+images/

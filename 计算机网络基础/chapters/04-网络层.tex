@@ -1,0 +1,454 @@
+\section{网络层}
+\subsection{网络层功能}
+\subsubsection{异构网络互连}
+网络通过中间设备实现互联。参加互联的计算机使用相同的网际协议 IP，把互联后的计算机看成一个虚拟（逻辑上的）的互联网。
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.8\textwidth]{images/异构网络互连.png}
+	\caption{异构网络互连}
+\end{figure}
+
+\subsubsection{路由转发}
+路由器的功能：路由选择（特定的路由协议构造出路由表）、分组转发（根据路由表生成的转发表对数据流转发）。
+\subsubsection{拥塞控制}
+过量的分组导致网络性能下降（路由器端口缓冲区有限）。
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.8\textwidth]{images/拥塞控制.png}
+	\caption{拥塞控制}
+\end{figure}
+
+\subsection{路由算法}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.8\textwidth]{images/路由算法.png}
+	\caption{路由算法}
+\end{figure}
+\begin{itemize}
+	\item 距离 - 向量路由算法：
+	仅与直接邻居交谈。定期将整个路由表传给相邻结点。/ 所有结点定期将整个路由表传邻居；被告知新路由加入本地，选择路由代价小的保留。更新报文大小与通信子网节点个数成正比。
+	\item 链路状态路由算法：
+	每个结点通过广播与其它所有结点交谈。通过原始数据自己计算路径。/ 主动测试所有邻接结点，定期将链路状态传播给所有其它结点，链路状态发生变化才向其它所有节点发送消息。
+\end{itemize}
+
+\subsection{路由协议}
+\subsubsection{概述}
+\begin{itemize}
+	\item 自治系统 AS：单一技术管理下的一组路由器。
+	\item 域内与域间路由：每个自治系统内一个或多个路由器需同时运行自治系统内、自治系统间的路由选择协议。
+\end{itemize}
+
+\subsubsection{常见路由协议}
+\begin{itemize}
+	\item RIP（路由信息协议）：距离 - 向量路由协议，适用于小型自治系统，最大跳数为 15。
+	\item OSPF（开放最短路径优先）：链路状态路由协议，适用于大型自治系统，支持 VLSM 和 CIDR。
+	\item BGP（边界网关协议）：自治系统间路由选择协议，基于路径向量算法，支持策略路由。
+\end{itemize}
+
+\subsubsection{RIP 路由协议（路由信息协议）：}
+\begin{itemize}
+	\item 内容: 
+	仅和相邻路由交换当前知道的全部信息，30 秒广播一次。/ 一条路径最多 15 个路由器，16 跳不可达。防止环路。/ RIPv1 不支持子网掩码，每个网络的子网掩码要相同，RIPv2 支持 VLSM、CIDR。
+	\item 所有路由器都知道整个 IP 网络路由表，称 RIP 最终收敛。
+	\item 距离向量算法：
+	\begin{itemize}
+		\item (目的网络,距离,下一跳)
+		\item 有更新查看下一跳是否相同，不同则换成距离小的。
+		\item 默认 180 秒没收到更新超时，认为不可达，设置为 16。
+	\end{itemize}
+	\item 缺点：
+	网络规模增大，会慢收敛，坏消息传的慢（明明已经不可达了，但是路由表还认为可达没更新）。
+\end{itemize}
+
+\subsubsection{OSPF 路由协议（开放最短路径优先）：}
+\begin{itemize}
+	\item 内容:
+	链路状态路由协议，适用于大型自治系统，支持 VLSM 和 CIDR。/ 每个路由器向所有其它路由器发送链路状态通告 LSA，包含本路由器的链路状态信息。/ 每个路由器根据收到的 LSA 构造完整的网络拓扑图，然后运行 Dijkstra 最短路径算法计算到各目的网络的最短路径。
+	\item 优点：
+	收敛快，支持大规模网络，支持 VLSM 和 CIDR。
+	\item 缺点：
+	实现复杂，开销大。
+\end{itemize}
+
+\subsubsection{BGP 路由协议（边界网关协议）：}
+\begin{itemize}
+	\item 内容：
+	边界网关协议，用于互联网网关之间。路径向量路由选择协议。/ BGP 路由表有 网络前缀 下一跳 到达目的网络所经过的自治系统序列。/ 四种报文：打开、更新、保活、通知。
+	\item 原理：
+	AS 中至少一个路由充当发言人与其它的发言人建立 TCP 链接交换信息。（自治系统再分区域，区域有本地、地区、主干）/ BGP 刚运行与邻站交换整个路由表，以后只在变化时更新。
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/典型的BGP拓扑.png}
+		\caption{典型的BGP拓扑}
+	\end{figure}
+\end{itemize}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{
+        >{\centering\arraybackslash}p{3.6cm}
+        >{\centering\arraybackslash}p{4.2cm}
+        >{\centering\arraybackslash}p{4.2cm}
+        >{\centering\arraybackslash}p{4.2cm}
+    }
+        \toprule[1.2pt]
+        特性 & RIP & OSPF & BGP \\
+        \midrule[0.9pt]
+        路由算法 & 距离—向量 & 链路状态 & 路径向量 \\
+        传输协议 & UDP & 在 IP 上（协议号 89） & TCP \\
+        所在层 & 应用层 & 网络层 & 应用层 \\
+        度量 / 选择依据 & 跳数（最大 15） & \makecell[c]{成本/带宽 等 \\（最短路径/Dijkstra）} & AS 路径、策略与属性 \\
+        收敛性 / 优缺点 & \makecell[c]{收敛慢；实现简单；\\ 适合小型网络} & \makecell[c]{收敛快；开销大；\\ 适合大型网络} & \makecell[c]{可伸缩并支持策略；\\ 复杂且策略驱动} \\
+        信息交换方式 & \makecell[c]{周期性全表广播 \\（定期更新）} & \makecell[c]{发送 LSA 并洪泛 \\（变化时更新）} & \makecell[c]{建立 TCP 会话 \\ 按变化做增量更新} \\
+        \bottomrule[1.2pt]
+    \end{tabular}
+    \caption{RIP、OSPF 与 BGP 的比较}
+    \label{tab:rip-ospf-bgp}
+\end{table}
+
+\subsection{IPV4}
+\subsubsection{IPV4的分组形式}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/IPV4报文形式.png}
+	\caption{IPv4 数据报格式}
+\end{figure}
+
+\paragraph{主要字段与含义}
+\begin{itemize}
+    \item Version (4bit)：IP 版本（IPv4 = 4）。
+    \item IHL (4bit)：首部长度，以 32-bit 字（即 4 字节）为单位。首部长度（字节）= IHL 值 \(\times 4\)。
+    \item DSCP/ECN (8bit)：服务类型 / 拥塞控制字段（历史上为 Tos）。
+    \item Total Length (16bit)：整个 IP 数据报总长度（单位为字节），包含首部和数据。
+    \item Identification (16bit)：分片标识符，用于重组。
+    \item Flags (3bit)：控制位（常见 DF=不分片, MF=更多分片）。
+    \item Fragment Offset (13bit)：片偏移，单位为 8 字节。实际偏移（字节）= FragmentOffset 值 \(\times 8\)。
+    \item TTL (8bit)：生存时间（跳数限制）。
+    \item Protocol (8bit)：上层协议号（如 TCP=6，UDP=17）。
+    \item Header Checksum (16bit)：首部校验和，仅覆盖首部。
+    \item Source Address / Destination Address (各32bit)：源 / 目的 IP 地址。
+    \item Options：可选字段，可变长，末端用 Padding 填充至 32-bit 对齐。
+\end{itemize}
+
+\paragraph{重要关系与计算公式}
+\begin{itemize}
+    \item 固定首部最小长度为 5（IHL 最小值），即 5 \(\times\) 4B = 20B。
+    \item 首部长度（字节） = IHL \(\times\) 4（B）。
+    \item 总长度（字节） = 首部长度（字节） + 数据长度（字节）。
+    \item 片偏移的单位为 8B：数据起始位置（字节） = FragmentOffset \(\times\) 8。
+\end{itemize}
+
+\subsubsection{数据包分片}
+\begin{itemize}
+	\item 概念：
+	当一个 IP 数据报大于某一链路的 MTU 时，路由器将其分割成多个片段进行传输，称为分片（Fragmentation）。/ 每个分片都包含完整的 IP 头部信息，并携带原数据报的一部分数据。
+	\item 分片字段：
+	\begin{itemize}
+		\item 标识符（Identification）：用于标识属于同一数据报的所有分片。
+		\item 标志（Flags）：控制分片行为的标志位，包括 DF（不分片）和 MF（更多分片）。
+		\item 片偏移（Fragment Offset）：指示该分片在原始数据报中的位置，单位为 8 字节。
+	\end{itemize}
+	\item 分片过程：
+	\begin{itemize}
+		\item 路由器根据下一跳链路的 MTU 计算需要分片的数据报大小。
+		\item 将数据报分割成多个符合 MTU 要求的分片，每个分片都包含 IP 头部和相应的数据部分。
+		\item 设置每个分片的标识符、标志和片偏移字段。
+	\end{itemize}
+	\item 重组过程：
+	\begin{itemize}
+		\item 目的主机接收所有分片后，根据标识符将它们归类为同一数据报。
+		\item 使用片偏移字段将分片按正确顺序排列，并检查 MF 标志以确定是否已接收所有分片。
+		\item 重组完成后，处理完整的数据报。
+	\end{itemize}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/IP分片.png}
+		\caption{IPv4 数据包分片示意图}
+	\end{figure}
+\end{itemize}
+分片被发出去后，独立在网络中旅行，可能走不同的路由路径，到达时间和顺序也是无法预测的：
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/分片路径.png}
+	\caption{IPv4 分片路径传递图}
+\end{figure}
+\newpage
+
+\subsubsection{分片重组过程}
+实际上，系统会分配一块内存作为重组分片的缓冲区。
+\\ 一个分片包首个分片达到后，系统将其移入到该缓冲区，等待其他分片到达
+\\ 后续分片达到后，系统先根据源地址、目的地址和标识符确定它属于哪个包；
+\\ 再根据偏移量确定它属于原包的哪个部分, 最后将分片数据拼接到原包中。
+\\ 当所有分片都到达后，原包也就成功重组完成，系统将其交给上层处理。
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/分片缓冲.png}
+	\caption{IPv4 分片缓冲示意图}
+\end{figure}
+
+\paragraph{典型的链路MTU变小的分片状态}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/分片变小.png}
+	\caption{典型链路MTU变小的分片状态示意图}
+\end{figure}
+
+\newpage
+
+\subsubsection{网段和网络的划分}
+\begin{itemize}
+	\item 一般用点分十进制表示法表示IP地址。
+	\begin{itemize}
+		\item 将32位二进制数分为4个8位字节, 每个字节转换成十进制数, 用小数点分隔开来表示。
+		\item 例如: 二进制地址 11000000 10101000 00000001 00000001 表示为十进制地址 192.168.1.1
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=.5\textwidth]{images/点分十进制表示法.png}
+			\caption{点分十进制表示法}
+		\end{figure}
+	\end{itemize}
+	\item IP地址由两部分组成, 网络号和主机号。
+	\begin{itemize}
+		\item 网络号: 用于标识IP网络, 由网络部分的二进制位组成。
+		\item 主机号: 用于标识网络中的主机, 由主机部分的二进制位组成。
+	\end{itemize}
+	\item IP地址分类
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/地址分类.png}
+		\includegraphics[width=\textwidth]{images/地址分类2.png}
+		\caption{地址分类}
+	\end{figure}
+	\newpage
+\end{itemize}
+\begin{itemize}
+	\item A类地址: 0xxxxxxx 网络号占8位, 网络个数 $2^7=128$ 主机号占24位, 支持约$2^24-2=16777214$ 约1677万个主机。地址范围 0.0.0.0 - 127.255.255.255
+	\item B类地址: 10xxxxxx 网络号占16位, 网络个数 $2^{14}=16384$ 主机号占16位, 支持约$2^{16}-2=65534$ 约6.5万个主机。地址范围 128.0.0.0 - 191.255.255.255
+	\item C类地址: 110xxxxx 网络号占24位, 网络个数 $2^{21}=2097152$ 主机号占8位, 支持约$2^8-2=254$ 约254个主机。地址范围 192.0.0.0 - 223.255.255.255
+	\item D类地址: 1110xxxx 用于多播, 地址范围 224.0.0.0 - 239.255.255.255
+	\item E类地址: 11110xxx 保留地址, 地址范围 240.0.0.0 - 255.255.255.255
+\end{itemize}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}c c c c c c c@{}}
+        \toprule
+        类别 & 前缀 & 网络号位 & 网络个数 & 主机号位 & 可用主机 & 地址范围 \\
+        \midrule
+        A & 0xxxxxxx & 8 & $128$ & 24 & $16\,777\,214$ & 0.0.0.0 -- 127.255.255.255 \\
+        B & 10xxxxxx & 16 & $16\,384$ & 16 & $65\,534$ & 128.0.0.0 -- 191.255.255.255 \\
+        C & 110xxxxx & 24 & $2\,097\,152$ & 8 & $254$ & 192.0.0.0 -- 223.255.255.255 \\
+        D & 1110xxxx & -- & -- & -- & -- & 224.0.0.0 -- 239.255.255.255 (多播) \\
+        E & 11110xxx & -- & -- & -- & -- & 240.0.0.0 -- 255.255.255.255 (保留) \\
+        \bottomrule
+    \end{tabular}
+    \caption{IPv4 地址类概览}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}c c c c c c c@{}}
+        \toprule
+        类别 & 掩码位 & 可用主机 & 地址范围 \\
+        \midrule
+        A类私有 & 8 & $16\,777\,214$ & 10.0.0.0 -- 10.255.255.255 \\
+        B类私有 & 11 & $2\,097\,150$ & 172.16.0.0 -- 172.31.255.255 \\
+        C类私有 & 16 & $65\,535$ & 192.168.0.0 -- 192.168.255.255 \\
+        \bottomrule
+    \end{tabular}
+    \caption{IPv4 私有地址类概览}
+\end{table}
+
+\subsubsection{子网掩码}
+子网掩码(subnet mask)又叫网络掩码、地址掩码、子网络遮罩，它是一种用来指明一个IP地址的哪些位标识的是主机所在的子网，以及哪些位标识的是主机的位掩码，子网掩码不能单独存在，它必须结合IP地址一起使用。
+\\
+子网掩码只有一个作用，就是将某个IP地址划分成网络地址和主机地址两部分。
+\\
+子网掩码是一个32位地址，用于屏蔽IP地址的一部分以区别网络标识和主机标识，并说明该IP地址是在局域网上，还是在远程网上
+\\
+利用子网掩码可以把大的网络划分成子网，即VLSM(可变长子网掩码)，也可以把小的网络归并成大的网络即超网
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/子网掩码.png}
+	\caption{子网掩码计算图}
+\end{figure}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}c c c@{}}
+        \toprule
+        地址类型 & 定义 & 备注 \\
+        \midrule
+        网络地址 & 主机部分全为 0 & 这类主机号不能用来标识主机 \\
+        广播地址 & 主机部分全为 1 & 用于向网络内所有主机广播 \\
+        回环地址 & 网络部分为 127 & 用来在本机上进行测试 \\
+        \bottomrule
+    \end{tabular}
+    \caption{地址类型示例}
+    \label{tab:addr-types}
+\end{table}
+
+\paragraph{网络中不同主机之间通信}
+\begin{itemize}
+	\item 同网段主机之间的通信，将数据直接发送给另一台主机
+	\\ 源主机的网络地址=目标主机的网络地址
+	\item 不同网段主机之间的通信，将数据发送给网关进行转发
+	\\ 源主机的网络地址≠目标主机的网络地址
+	\item 子网掩码（Netmask）可区分IP地址的网络地址部分
+	\\ 补充：跨网段通信，数据将传递给网关
+\end{itemize}
+
+\paragraph{子网划分的原因和默认子网掩码}
+\begin{itemize}
+	\item 原因：
+	\begin{itemize}
+		\item 减少广播风暴，提高网络性能
+		\item 提高网络的安全性
+		\item 便于网络管理和规划
+		\item 节约IP地址资源
+	\end{itemize}
+	\item 默认子网掩码：
+	\item A类：255.0.0.0
+	\item B类：255.255.0.0
+	\item C类：255.255.255.0
+\end{itemize}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}p{3.4cm} p{6.0cm} p{6.0cm}@{}}
+        \toprule
+        特性 & VLSM（可变长子网掩码） & CIDR（无类别域间路由） \\
+        \midrule
+        概念 & 在同一网络（如一个 A/B/C 类网络）内部允许使用不同长度的子网掩码以按需划分子网。 & 使用前缀长度表示网络，可对前缀进行汇总（超网），无类边界。 \\
+        目标 & 提高地址利用率，按主机需求灵活划分子网。 & 减少路由表项，通过前缀聚合实现可扩展路由。 \\
+        实现方式 & 在子网划分时为不同子网分配不同掩码（同一地址块内可有多种掩码）。 & 通过任意长度的前缀表示网络，并在路由器间传播这些前缀（支持汇总）。 \\
+        地址表示 & 仍以 IP和子网掩码表示 & 以网络前缀表示，并常用于路由聚合。 \\
+        路由选择 / 匹配 & 无额外匹配规则（路由条目为具体子网），配合最长前缀匹配工作。 & 基于最长前缀匹配（Longest Prefix Match），在多条匹配中选择前缀最长者。 \\
+        优点 & 减少地址浪费，便于细粒度地址规划。 & 显著减少全网路由表项，提升路由可扩展性。 \\
+        典型用途 & 企业/组织内部子网规划、按需分配不同大小子网。 & ISP 与互联网上的路由聚合与汇总。 \\
+        \bottomrule
+    \end{tabular}
+    \caption{VLSM 与 CIDR 的比较}
+    \label{tab:vlsm-cidr}
+\end{table}
+
+\subsubsection{路由转发原理}
+过程：直接交付 > 特定路由 > 匹配路由 > 默认路由（后三个是间接交付）
+\begin{itemize}
+	\item 将数据报目的 IP 地址和条目中子网掩码或网络前缀 “与” 运算，结果看是否和路由表条目中的 IP 地址相同，相同则匹配（CIDR 则选择网络前缀最长的即最精确的）。
+	\item 匹配成功则将数据报转发到该路由器的对应接口，否则继续查找下一个路由表条目，直到找到匹配项或查完整个路由表。
+	\item 若无匹配项，则根据默认路由（若有）转发，否则丢弃数据报并发送 ICMP 差错报文给源主机。
+\end{itemize}
+
+\subsubsection{NAT}
+通过 IP：端口 的配合来做映射。
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/NAT.png}
+	\caption{NAT模式示意图}
+\end{figure}
+
+\subsubsection{ARP}
+每个主机有一个 ARP 高速缓存，ARP 协议动态维护 IP 到 MAC 的映射表。若无目的主机 IP，则广播 ARP 请求分组（通过目的 IP 地址）得到目的主机回复的 MAC。
+
+\subsubsection{DHCP}
+基于 UDP，应用层协议，C/S 工作方式。/ 过程：客户端广播发现报文，服务端广播提供，客户端广播请求，服务端广播确认。
+
+\subsubsection{ICMP}
+ICMP（网际控制报文协议）为 IP 层协议。主机或路由器报告差错和异常情况。
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.8\textwidth]{images/ICMP.png}
+	\caption{ICMP示意图}
+\end{figure}
+
+\subsection{IPV6}
+\subsubsection{IPV6分组格式}
+\begin{itemize}
+	\item 128 bit，每 16 bit 用冒号隔开。
+	\item 源节点才能分片。
+	\item 安全性：身份验证、保密功能。
+	\item IPv4、IPv6 不兼容（双协议、隧道技术），但与其它网络协议兼容。
+\end{itemize}
+
+\subsubsection{三种地址类型}
+\begin{itemize}
+	\item 单播地址：标识单个接口，数据报发送到该地址的分组只送达该接口。
+	\item 组播地址：标识一组接口，数据报发送到该地址的分组送达该组所有接口。
+	\item 任播地址：标识一组接口，数据报发送到该地址的分组送达该组中“最近”的接口。
+	\item 特殊地址：(IPV6没有显式定义广播地址)
+	\begin{table}[h]
+	\centering
+	\begin{tabular}{@{}p{4.5cm} p{12cm}@{}}
+		\toprule
+		地址类型 & 前缀 \\
+		\midrule
+		未指定地址 & ::/128，全部为 0，表示“无地址”。 \\
+		回环地址 & ::1/128，回环地址，表示本地主机。 \\
+		链路本地地址 & FE80::/10，自动配置地址，仅用于链路内通信。 \\
+		站点本地地址 & FEC0::/10，站点本地地址（类似 IPv4 私有地址，已被弃用）。 \\
+		多播地址 & FF00::/8，IPv6 组播地址前缀。 \\
+		任播地址 & 由单播地址派生，前缀与单播地址相同，用于最近节点路由。 \\
+		IPv4 映射地址 & ::FFFF:0:0/96，用于 IPv4 到 IPv6 的映射（过渡）。 \\
+		IPv4 兼容地址 & ::/96，IPv4 兼容地址（历史过渡用途）。 \\
+		全球单播地址 & 2000::/3，全球可路由单播地址（类似 IPv4 公网地址）。 \\
+		链路本地多播地址 & FF02::/16，链路范围内的多播地址。 \\
+		站点本地多播地址 & FF05::/16，站点范围内的多播地址。 \\
+		组织本地多播地址 & FF08::/16，组织范围内的多播地址。 \\
+		全球多播地址 & FF0E::/16，全球范围内的多播地址。 \\
+		\bottomrule
+	\end{tabular}
+	\caption{IPv6 地址类型一览}
+	\label{tab:ipv6-addresses}
+	\end{table}
+	\item 地址缩写模式
+	\begin{itemize}
+		\item 前导零省略：每个16位块内的前导零可以省略。
+		\item -- 例如，2001:0db8:0000:0042:0000:8a2e:0370:7334 可写为 2001:db8:0:42:0:8a2e:370:7334。
+		\item 连续零压缩：连续的16位块全为零时，可以用双冒号 (::) 代替，但只能使用一次。
+		\item -- 例如，2001:0db8:0000:0000:0000:0000:1428:57ab 可写为 2001:db8::1428:57ab。
+		\item 单位零统一：单个16位块全为零时，仍然可以用单个零表示。
+		\item -- 例如，2001:0db8:0000:0001:0000:0000:0000:0001 可写为 2001:db8:0:1::1。
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{IPV6分级}
+\begin{itemize}
+	\item 顶级(第一级): 全球公共拓扑 前缀(3bit)+ 8bit TLA ID + 24bit NLA ID
+	\item 场点(第二级): 16bit SLA/组织 ID
+	\item 接口(第三级): 64bit 接口 ID
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{images/IPV6地址形式.png}
+		\caption{IPV6地址形式}
+	\end{figure}
+\end{itemize}
+
+\subsubsection{IPv4 向 IPv6 过渡：}
+\begin{itemize}
+	\item 双协议栈：主机和路由器同时支持 IPv4 和 IPv6 协议栈。
+	\item 隧道技术：在 IPv4 网络中封装 IPv6 数据报进行传输。
+\end{itemize}
+
+\subsection{IP组播}
+---
+
+\subsection{移动IP}
+---
+
+\subsection{网络层设备}
+\subsubsection{路由器组成和功能}
+\begin{itemize}
+	\item 多个广播域互联需要使用路由器。
+	\item 路由器由路由选择、分组转发两部分组成：
+	\item a）路由选择：路由协议交互完成计算，构造出路由表。
+	\item b）分组转发：根据路由表生成转发表。解封装网络层数据报再根据转发表封装成网络数据包转发。
+\end{itemize}
+
+\subsubsection{路由表与路由转发：}
+\begin{itemize}
+	\item 路由表标准表项：目的网络 IP、子网掩码、下一跳 IP、接口。
+	\item 注意（不考虑 NAT）：IP 数据报的源/目的地址不变；局域网内帧的源/目的地址不变，经过路由器时帧的源/目的地址变化。
+\end{itemize}
