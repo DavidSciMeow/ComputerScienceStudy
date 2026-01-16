@@ -1,0 +1,86 @@
+\section{程序设计基础}
+\subsection{控制流}
+\subsubsection{顺序结构}
+程序按照书写顺序逐行执行，这是最基本的执行模型。程序由若干语句组成，语句按顺序依次计算并产生副作用或返回值。
+
+\subsubsection{分支结构}
+用于根据条件选择执行路径。常见形式有 `if`、`if-else`、`ifelse()` 以及 `switch()`。
+示例：
+\begin{verbatim}
+if (x > 0) {
+  print("positive")
+} else if (x < 0) {
+  print("negative")
+} else {
+  print("zero")
+}
+\end{verbatim}
+
+\subsubsection{循环结构}
+用于重复执行代码。常见的循环有 `for`、`while` 和 `repeat`。在 R 中优先考虑向量化操作或 `apply` 系列以提高性能。
+示例：
+\begin{verbatim}
+for (i in 1:5) {
+  print(i)
+}
+
+i <- 1
+while (i <= 5) {
+  print(i)
+  i <- i + 1
+}
+\end{verbatim}
+
+\subsubsection{选择结构}
+`switch()` 用于根据一个表达式的值选择多个分支，适合离散的选项分发。逻辑索引用于按条件筛选或赋值，是 R 风格的“选择”操作。
+
+\subsection{函数设计}
+\subsubsection{声明、定义与调用}
+函数用 `function` 关键字声明，并通过名称调用：
+\begin{verbatim}
+f <- function(x, y = 1) {
+  x + y
+}
+f(2)
+\end{verbatim}
+
+\subsubsection{返回值}
+函数的返回值为最后一个求值表达式的值，或显式使用 `return()` 返回。
+
+\subsubsection{函数的输入输出}
+函数参数支持位置参数、命名参数和默认值。建议为复杂函数写明参数含义并进行输入校验。
+
+\subsubsection{环境与范围}
+R 使用词法作用域（lexical scoping）。函数内部默认访问最近的环境；使用 `<<-` 可修改外层环境变量，但应谨慎使用以避免副作用。
+
+\subsubsection{递归函数}
+递归函数在函数体内调用自身，适用于分治和递归定义的问题，但需注意终止条件与性能。示例：阶乘
+\begin{verbatim}
+fact <- function(n) {
+  if (n <= 1) return(1)
+  n * fact(n - 1)
+}
+\end{verbatim}
+
+\subsection{编程规范与性能优化}
+\subsubsection{使用脚本}
+把相关代码组织成脚本文件（`.R`），用 `source()` 加载；项目层面建议使用包结构或 `here`/`rproj` 管理路径。
+
+\subsubsection{编程规范}
+命名应有一致性（如驼峰或下划线）；写足够注释，避免“魔法数字”；把可复用逻辑封装为函数，添加文档与示例。
+
+\subsubsection{性能优化}
+优先使用向量化操作、预分配存储（如 `numeric(n)`）、适当选择数据结构（`data.table`/`tibble`），并用 `Rprof()`、`profvis` 等工具定位瓶颈。示例建议：
+\begin{verbatim}
+# 不推荐：在循环中逐步扩展向量
+v <- c()
+for (i in 1:10000) v <- c(v, i)
+
+# 推荐：预分配
+v <- integer(10000)
+for (i in 1:10000) v[i] <- i
+\end{verbatim}
+
+更多进阶优化包括并行计算（`parallel`, `future`）、使用 C/C++ 接口（`Rcpp`）等。
+
+% 结束

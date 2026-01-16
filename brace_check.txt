@@ -1,0 +1,15 @@
+﻿Final balance: 0
+Balance up to line 10: 0
+Balance up to line 20: 0
+Balance up to line 30: 0
+Balance up to line 40: 0
+Balance up to line 50: 0
+Balance up to line 60: 0
+Balance up to line 70: 0
+Balance up to line 80: 0
+Balance up to line 90: 0
+Balance up to line 100: 0
+Balance up to line 110: 0
+Balance up to line 120: 0
+Balance up to line 130: 0
+Balance up to line 133: 0

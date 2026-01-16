@@ -1,0 +1,94 @@
+\section{数据结构与数据处理}
+\subsection{向量}
+\subsubsection{创建向量}
+使用 \textnormal{c()}、\textnormal{seq()}、\textnormal{rep()} 等创建向量：
+\begin{verbatim}
+x <- c(1, 2, 3)
+y <- seq(1, 10, by = 2)
+z <- rep(0, times = 5)
+\end{verbatim}
+
+\subsubsection{使用索引访问向量}
+使用下标访问（从 1 开始）：\verb|x[1]|；逻辑索引和名称索引也可用。
+
+\subsubsection{循环补齐}
+循环中逐步增长向量效率低，推荐预分配或使用向量化操作。
+
+\subsubsection{向量比较}
+对向量进行比较会返回逻辑向量，例如 `x > 0`。
+
+\subsubsection{按条件提取元素}
+使用逻辑索引提取满足条件的元素：\verb|x[x > 0]|。
+
+\subsection{矩阵和数组}
+\subsubsection{创建矩阵}
+用 \textnormal{matrix()} 或 \textnormal{rbind}/\textnormal{cbind} 创建矩阵：
+\begin{verbatim}
+m <- matrix(1:6, nrow = 2)
+\end{verbatim}
+
+\subsubsection{线性运算}
+支持矩阵乘法（`%*%`）、逐元素运算、转置（`t()`）等。
+
+\subsubsection{使用矩阵索引}
+通过 `[i, j]` 访问元素，行/列切片返回矩阵或向量。
+
+\subsubsection{Apply 函数族}
+使用 `apply()`、`rowSums()`、`colMeans()` 等对矩阵按维度操作：
+\begin{verbatim}
+apply(m, 1, sum) # 每行求和
+\end{verbatim}
+
+\subsubsection{多维数组}
+使用 `array()` 创建多维数组，使用 `[i,j,k]` 索引访问。
+
+\subsection{数据框}
+\subsubsection{创建数据框}
+使用 `data.frame()` 或 `tibble::tibble()` 创建数据框：
+\begin{verbatim}
+df <- data.frame(a = 1:3, b = c("x","y","z"))
+\end{verbatim}
+
+\subsubsection{访问元素}
+使用 `df\$col`、`df[i, j]`、`df["col"]` 访问列和单元格；使用 `subset()` 或 `dplyr` 进行筛选。
+
+\subsubsection{使用 SQL 语句查询数据}
+可用 `sqldf` 包在 R 中对数据框执行 SQL 查询：
+\begin{verbatim}
+library(sqldf)
+sqldf("select * from df where a > 1")
+\end{verbatim}
+
+\subsection{因子}
+因子用于表示分类数据，常用于统计建模与绘图；使用 `factor()` 创建并设置水平（levels）与标签（labels）。
+
+\subsection{列表}
+列表是异质容器，可存放不同类型对象：
+\begin{verbatim}
+lst <- list(name = "Alice", scores = c(90, 85))
+\end{verbatim}
+使用 `[[ ]]` 或 `\$` 访问元素。
+
+\subsection{数据导入与导出}
+\subsubsection{数据文件的读写}
+常用函数：\texttt{read.csv/read.table}、\texttt{write.csv}；现代包：\texttt{readr::read\_csv}、\texttt{readr::write\_csv}。
+
+\subsubsection{rio 包}
+`rio` 提供简洁的 `import()`/`export()` 接口，自动识别文件格式，方便常见数据交换。
+
+\subsubsection{数据编辑器}
+可使用 `edit()`、`utils::View()` 或 RStudio 的数据查看器进行交互式编辑/查看。
+
+\subsection{数据清洗}
+\subsubsection{数据排序}
+使用 `order()`、`dplyr::arrange()` 对数据排序。
+
+\subsubsection{数据清洗的一般方法}
+- 缺失值处理（删除、填补、插值）
+- 重编码与类型转换（如将字符转因子）
+- 重命名列、去重、格式化日期
+
+\subsubsection{mice 包}
+`mice` 提供多重插补方法处理缺失数据，适合较复杂的缺失模式分析。
+
+% 结束

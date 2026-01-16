@@ -1,0 +1,89 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setmainfont{Times New Roman}
+\setCJKmainfont[BoldFont={SimHei}]{SimSun}
+% Define a CJK monospaced/typewriter font to avoid xeCJK warning about \CJKttdefault
+\setCJKmonofont{SimSun}
+\setCJKfamilyfont{CJKtt}{SimSun}
+\renewcommand{\CJKttdefault}{CJKtt}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage[left=1.5cm,right=1.5cm,top=1.5cm,bottom=1.5cm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,decorations.pathreplacing}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[section]{placeins}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.85}
+\setcounter{topnumber}{5}
+\setcounter{totalnumber}{5}
+
+\usepackage{tocloft}
+\renewcommand{\contentsname}{目录}
+
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[pdfencoding=auto,unicode=true,bookmarks=true,colorlinks=true,linkcolor=black]{hyperref}
+\usepackage{bookmark}
+\usepackage{makecell}
+\usepackage{longtable}
+
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{3}
+
+\newcommand{\blankpagewithtext}[1]{%
+	\clearpage%
+	\thispagestyle{empty}%
+	\vspace*{\fill}%
+	\begin{center}{\Huge #1}\end{center}%
+	\vspace*{\fill}%
+	\clearpage%
+}
+
+\title{R语言知识点汇编}
+\date{2026-01-16}
+\author{DavidSciMeow}
+
+\begin{document}
+\sloppy
+\emergencystretch=1em
+\pagenumbering{Roman}
+\begin{titlepage}
+\vspace*{\fill}
+\begin{center}
+{ \huge \bfseries R语言知识点汇编}\\[0.4cm]
+\emph{Author: DavidSciMeow}\\
+\vfill
+{\large 2026-01-16}
+\end{center}
+\end{titlepage}
+\tableofcontents
+\blankpagewithtext{留空}
+\newpage
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\include{chapters/01-R语言概述}
+\newpage
+\include{chapters/02-数据类型与运算}
+\newpage
+\include{chapters/03-程序设计基础}
+\newpage
+\include{chapters/04-类与对象}
+\newpage
+\include{chapters/05-数据结构与数据处理}
+\newpage
+\include{chapters/06-绘图和数据可视化}
+\newpage
+\include{chapters/07-总结}
+\newpage
+
+\end{document}

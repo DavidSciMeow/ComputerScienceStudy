@@ -1,0 +1,119 @@
+\section{数据类型与运算}
+\subsection{基础知识}
+\paragraph{向量}
+向量是 R 中最基础的数据结构之一；一个向量包含同一类型的元素（numeric、integer、logical、character）。向量支持下标访问（从 1 开始），常见创建方式有 \textnormal{c(...)}、\textnormal{seq()}、\textnormal{rep()}。
+
+\paragraph{对象}
+在 R 中几乎一切都是对象：向量、矩阵、数据框、函数等都是对象，可以赋值给变量并传递给函数。
+
+\paragraph{函数}
+函数是 R 的第一类对象，既有基本函数（如 \textnormal{sum()}, \textnormal{mean()}），也可自定义函数（\textnormal{function(x) \{ ... \}}）。函数参数支持位置与命名传递，可设默认值。
+
+\paragraph{标识符与保留字}
+标识符用于命名对象，必须以字母或点开头（但不能以点后接数字），后续可包含字母、数字、点和下划线。R 有若干保留字（如 \textnormal{if}, \textnormal{else}, \textnormal{for}, \textnormal{function}, \textnormal{TRUE}, \textnormal{FALSE}, \textnormal{NA}），不能用作变量名。
+
+\subsection{数据类型}
+\paragraph{基本数据类型}
+\begin{table}[ht]
+  \centering
+  \begin{tabularx}{\linewidth}{@{}l X@{}}
+    \toprule
+    类型 & 说明 \\
+    \midrule
+    数值型 & numeric / double \\
+    整数型 & integer（例如使用 \textnormal{1L} 表示整数常量） \\
+    逻辑型 & logical（\textnormal{TRUE} / \textnormal{FALSE}） \\
+    字符型 & character（字符串，用双引号或单引号表示） \\
+    因子 & factor（用于表示分类变量，底层用整数表示并带有标签） \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\paragraph{变量与常量}
+变量通过赋值创建（如 \textnormal{x <- 1} 或 \textnormal{x = 1}），R 没有语言层面的常量关键字，但可通过约定或包实现只读行为。
+
+\paragraph{特殊值}
+\begin{table}[ht]
+  \centering
+  \begin{tabularx}{\linewidth}{@{}l X@{}}
+  	\toprule
+    符号 & 含义 \\
+    \midrule
+    	\textnormal{NA} & 缺失值（missing value） \\
+    	\textnormal{NaN} & 不是数（not a number），通常为 \textnormal{0/0} 的结果 \\
+    	\textnormal{Inf} / \textnormal{-Inf} & 正/负无穷 \\
+    	\textnormal{NULL} & 表示空对象 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{基本运算}
+\paragraph{运算符分类}
+\begin{table}[ht]
+  \centering
+  \begin{tabularx}{\linewidth}{@{}c l l X@{}}
+    \toprule
+    优先级 & 类别 & 符号 & 说明 \\
+    \midrule
+    1 & 幂与一元运算 & \textnormal{\^} & 幂运算 \\
+    1 & 幂与一元运算 & \textnormal{+}（一元） & 一元正号 \\
+    1 & 幂与一元运算 & \textnormal{-}（一元） & 一元负号 \\
+    2 & 乘除与模 & \textnormal{*} & 乘法 \\
+    2 & 乘除与模 & \textnormal{/} & 除法 \\
+    2 & 乘除与模 & \textnormal{\%\%} & 取模（返回余数） \\
+    2 & 乘除与模 & \textnormal{\%/\%} & 整数除法 \\
+    3 & 加减 & \textnormal{+} & 加法 \\
+    3 & 加减 & \textnormal{-} & 减法 \\
+    4 & 关系运算 & \textnormal{==} & 等于 \\
+    4 & 关系运算 & \textnormal{!=} & 不等于 \\
+    4 & 关系运算 & \textnormal{>} & 大于 \\
+    4 & 关系运算 & \textnormal{<} & 小于 \\
+    4 & 关系运算 & \textnormal{>=} & 大于等于 \\
+    4 & 关系运算 & \textnormal{<=} & 小于等于 \\
+    5 & 序列与索引运算 & \textnormal{:} & 序列生成运算符 \\
+    6 & 元素级逻辑 & \textnormal{\&} & 元素级与 \\
+    6 & 元素级逻辑 & \textnormal{|} & 元素级或 \\
+    7 & 短路逻辑 & \textnormal{\&\&} & 短路与 \\
+    7 & 短路逻辑 & \textnormal{||} & 短路或 \\
+    8 & 取反 & \textnormal{!} & 逻辑取反 \\
+    9 & 赋值 & \textnormal{<-} & 左赋值 \\
+    9 & 赋值 & \textnormal{=} & 赋值（注意上下文差异） \\
+    9 & 赋值 & \textnormal{->} & 右赋值 \\
+    9 & 赋值 & \textnormal{<<-} & 全局赋值 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabularx}{\linewidth}{@{}l X@{}}
+    \toprule
+    数据结构 & 说明 \\
+    \midrule
+    向量（vector） & 同质一维数组，最常用的数据结构。 \\
+    矩阵（matrix） & 同质二维数组，可用 \textnormal{matrix()} 创建。 \\
+    数据框（data.frame / tibble） & 异质表格型结构，每列可为不同类型，常用于数据分析。 \\
+    列表（list） & 异质的一维容器，可包含任意对象（向量、数据框、函数等）。 \\
+    因子（factor） & 用于表示分类数据，便于统计建模。 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\paragraph{索引与子集}
+R 支持多种索引方式：数字下标（从 1 开始）、逻辑下标、名称下标以及切片。使用 \verb|[ ]|、\verb|[[ ]]| 和 \verb|$| 来访问不同层级或字段。
+
+\paragraph{示例}
+\begin{table}[ht]
+  \centering
+  \begin{tabularx}{\linewidth}{@{}l X@{}}
+    \toprule
+    操作 & 例子 \\
+    \midrule
+    创建向量 & \textnormal{x <- c(1, 2, 3)} \\
+    创建数据框 & \textnormal{df <- data.frame(a = 1:3, b = c("x","y","z"))} \\
+    子集选择 & \textnormal{df[df\$a > 1, ]}、\textnormal{lst[[1]]}、\textnormal{df\$b} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% 结束

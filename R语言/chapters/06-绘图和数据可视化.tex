@@ -1,0 +1,88 @@
+\section{绘图和数据可视化}
+\subsection{基本图形和绘图函数}
+\subsubsection{基础图形的创建}
+使用基础绘图函数 `plot()`, `barplot()`, `hist()`, `boxplot()` 等创建常见图形。例如：
+\begin{verbatim}
+x <- rnorm(100)
+plot(x, main = "散点图示例", xlab = "索引", ylab = "值")
+hist(x, breaks = 20, main = "直方图")
+\end{verbatim}
+
+\subsubsection{新增绘图窗口}
+在交互式会话中用 `dev.new()`（或 RStudio 的绘图窗格）打开新绘图设备；也可指定设备类型如 `png()`、`pdf()`。
+
+\subsubsection{导出图形}
+使用 `png()`, `jpeg()`, `pdf()`, `svg()` 等函数将绘图输出到文件：
+\begin{verbatim}
+png("figure.png", width = 800, height = 600)
+plot(x)
+dev.off()
+\end{verbatim}
+
+\subsection{调整绘图参数}
+\subsubsection{自定义特征}
+通过 `par()` 设置全局绘图参数（如边距 `mar`、布局 `mfrow` 等）。
+
+\subsubsection{调整符号与线条}
+使用参数 `pch`（点型）、`cex`（大小）、`lty`（线型）、`lwd`（线宽）自定义样式：
+\begin{verbatim}
+plot(x, pch = 19, cex = 0.6)
+lines(smooth.spline(x), lty = 2, lwd = 2)
+\end{verbatim}
+
+\subsubsection{调整颜色}
+使用 `col` 指定颜色，可用颜色名、十六进制或 `rainbow()`、`heat.colors()` 等调色函数。
+
+\subsubsection{调整标签和标题文本}
+使用 `main`、`xlab`、`ylab`、`cex.main`、`cex.lab` 控制标题与标签文本大小与内容；用 `mtext()` 添加边缘文本。
+
+\subsection{其他自定义元素}
+\subsubsection{坐标轴}
+使用 `axis()` 自定义刻度与标签，关闭自动坐标 `axes = FALSE` 后手动绘制。
+
+\subsubsection{次要刻度线}
+基础绘图没有内建次刻度，可用 `axis()` 与 `abline()` 手动绘制细分刻度线或借助 `Hmisc::minor.tick()`。
+
+\subsubsection{网格线}
+使用 `grid()` 或 `abline()` 添加网格线：
+\begin{verbatim}
+plot(x)
+grid(nx = NULL, ny = NULL)
+\end{verbatim}
+
+\subsubsection{叠加绘图}
+通过在已有图上使用 `points()`, `lines()`, `text()` 等函数叠加元素；要保持尺寸比例可使用 `par(new = TRUE)` 小心覆盖坐标系。
+
+\subsubsection{图例}
+使用 `legend()` 添加图例，指定位置、符号与颜色：
+\begin{verbatim}
+legend("topright", legend = c("数据1","拟合"), pch = c(1, NA), lty = c(NA,2))
+\end{verbatim}
+
+\subsubsection{标注}
+使用 `text()`、`arrows()`、`points()` 等添加标注与箭头以突出要点。
+
+\subsection{描述性统计图}
+\subsubsection{柱状图}
+使用 `barplot()` 绘制分组或堆叠柱状图。
+
+\subsubsection{饼图}
+使用 `pie()` 绘制饼图（注意：饼图在展示百分比时应谨慎使用）。
+
+\subsubsection{直方图}
+使用 `hist()` 控制 `breaks` 与 `freq/density` 参数显示频数或密度。
+
+\subsubsection{箱型图}
+使用 `boxplot()` 比较分组分布并检测异常值。
+
+\subsubsection{三维绘图}
+可用基础函数 `persp()` 绘制三维表面，或使用 `scatterplot3d`/`rgl` 包做交互式三维散点图。
+
+\subsection{动态图形}
+\subsubsection{保存 GIF}
+使用 `magick` 或 `animation` 包将多帧图像合成为 GIF，或使用 `gifski` + `png` 帧序列。
+
+\subsubsection{gganimate 包}
+\verb|gganimate| 基于 \verb|ggplot2| 可创建时间序列动画，典型流程：用 \verb|ggplot()| 创建静态图，加入 \verb|transition_*()| 定义帧过渡，最后用 \verb|animate()| 或 \verb|anim_save()| 导出。
+
+% 结束

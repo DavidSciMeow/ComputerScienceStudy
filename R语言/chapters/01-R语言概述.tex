@@ -1,0 +1,99 @@
+\section{R语言概述}
+\subsection{R 的起源与发展}
+R 最早源自贝尔实验室的 S 语言的思想和实现，目标是为统计计算和图形展示提供一种交互式语言。1990 年代早期，Ross Ihaka 与 Robert Gentleman 在新西兰奥克兰大学基于 S 设计并实现了 R。随后 R 在全球范围内被学术界和工业界广泛采纳，形成了以 CRAN（Comprehensive R Archive Network）为核心的软件和文档分发体系。R 基金会（R Foundation）负责协调 R 的发展与发布，社区通过贡献包、文档和示例推动了生态的扩展。
+
+\paragraph{演化}
+R 从最初作为统计研究工具演变为数据科学常用语言之一：核心语言保持稳定，扩展主要通过 CRAN、Bioconductor、GitHub 等渠道提供大量领域包（统计建模、可视化、机器学习、生物信息等）。近年出现了诸如 \textnormal{data.table}、\textnormal{tidyverse}、\textnormal{sparklyr} 等重要项目，提升了 R 在大数据与工程化场景下的可用性。
+
+\paragraph{R 的特点}
+\begin{itemize}[leftmargin=*]
+  \item 开源免费，跨平台（Windows、macOS、Linux）。
+  \item 面向向量和矩阵的计算模型，内置丰富的统计函数与绘图功能。
+  \item 强大的包生态（CRAN、Bioconductor 等）和活跃社区支持。
+  \item 交互式分析与脚本化工作流并重，便于探索性分析与可重复研究。
+  \item 支持扩展的 C/Fortran 接口以及与数据库、大数据平台的集成能力。
+\end{itemize}
+
+\subsection{安装与运行 R}
+\paragraph{获取 R}
+可从 CRAN 官网（https://cran.r-project.org）或各地镜像下载适用于不同操作系统的安装包；在部分 Linux 发行版上也可通过包管理器安装。
+
+\paragraph{安装}
+\begin{itemize}[leftmargin=*]
+  \item Windows：下载官方安装程序并按提示安装。
+  \item macOS：下载 \textnormal{.pkg} 安装包或使用 Homebrew（\textnormal{brew install r}）。
+  \item Linux：使用发行版的包管理器（如 \textnormal{apt}、\textnormal{yum}）或从源代码编译安装。
+\end{itemize}
+
+\paragraph{运行 R}
+\begin{itemize}[leftmargin=*]
+  \item 交互式：\textnormal{R} 命令进入交互式控制台；Windows 有 RGui。
+  \item 脚本运行：使用 \verb|Rscript your_script.R| 或 \textnormal{R CMD BATCH} 在批处理/生产环境中执行脚本。
+  \item IDE：常用 \textnormal{RStudio}、\textnormal{VS Code}（配合 R 扩展）提供更友好的开发环境。
+\end{itemize}
+
+\subsection{安装与使用包}
+\paragraph{什么是包}
+包（package）是 R 的功能扩展单元，包含 R 代码、数据、文档、示例与测试。CRAN 是标准分发渠道，Bioconductor 面向生物信息学领域，GitHub 常用于开发版分发。
+
+\paragraph{安装包}
+\begin{itemize}[leftmargin=*]
+  \item 从 CRAN：\textnormal{install.packages("pkgname")}。
+  \item Bioconductor：使用 \textnormal{BiocManager\allowbreak::\allowbreak install("pkg")}。
+  \item GitHub：使用 \textnormal{devtools\allowbreak::\allowbreak install\_github("user/repo")} 或 \textnormal{remotes\allowbreak::\allowbreak install\_github()}。
+\end{itemize}
+
+\paragraph{载入与使用}
+使用 \textnormal{library(pkgname)} 或 \textnormal{require(pkgname)} 载入包；也可用 \textnormal{pkgname\allowbreak::\allowbreak function()} 直接调用包内函数，避免污染全局命名空间。
+
+\paragraph{卸载包}
+使用 \textnormal{remove.packages("pkgname")} 从库中移除包。
+
+\paragraph{包的命名空间}
+包拥有独立命名空间，导出的符号可被用户直接调用，未导出的符号仅供包内部使用。命名空间机制通过 \textnormal{NAMESPACE} 文件声明导出与导入规则，\textnormal{::} 与 \textnormal{:::} 运算符用于访问导出和非导出对象（后者不推荐常用）。理解搜索路径（\textnormal{search()}）与命名冲突有助于排查加载问题。
+
+\subsection{工作空间管理}
+\paragraph{工作空间概念}
+工作空间（workspace）指当前 R 会话中已创建的对象集合（变量、函数、数据框等）。常见操作包括列出对象、保存与恢复、清理及设置工作目录。
+
+\paragraph{常用命令}
+\begin{itemize}[leftmargin=*]
+  \item \textnormal{ls()} 或 \textnormal{objects()}：列出当前对象。
+  \item \textnormal{rm(x)}：删除对象，\textnormal{rm(list = ls())} 可清空当前会话对象。
+  \item \textnormal{save(object, file = "file.RData")}、\textnormal{load("file.RData")}：持久化与恢复对象。
+  \item \textnormal{save.image()}：保存整个工作空间（生成 \textnormal{.RData}）。
+  \item \textnormal{getwd()}、\textnormal{setwd()}：查看与设置工作目录。
+  \item 推荐使用 R 项目（RStudio 的 \textnormal{.Rproj}）来管理文件与会话，提升可重现性。
+\end{itemize}
+
+\subsection{集成开发环境 RStudio}
+\paragraph{什么是 IDE}
+集成开发环境（IDE）是将编辑器、控制台、调试器、项目管理、包与帮助浏览等功能整合在一起的工具，旨在提高开发效率与可视化操作体验。
+
+\paragraph{RStudio 的主要功能与使用}
+\begin{itemize}[leftmargin=*]
+  \item 脚本编辑与执行（逐行或选中运行）、交互控制台。
+  \item 环境/变量窗格、历史记录、文件与包管理面板。
+  \item 可视化输出、绘图浏览与导出功能。
+  \item 调试工具（断点、step 等）、项目支持（\textnormal{.Rproj}）、R Markdown 与交互式文档支持。
+  \item RStudio Server 可在远程服务器上提供基于浏览器的 IDE。
+\end{itemize}
+
+\subsection{帮助系统}
+R 提供多层次帮助：函数级别（\textnormal{?mean} 或 \textnormal{help("mean")}）、模糊搜索（\textnormal{??"regression"} 或 \textnormal{help.search()}）、包文档（\textnormal{help(package = "ggplot2")}）、示例（\textnormal{example(fun)}）和详细教程/长文档（\textnormal{vignette("vignette-name", package = "pkg")}）。另外 \textnormal{help.start()} 可启动本地 HTML 帮助索引。熟练使用帮助系统能显著加速学习与开发。
+
+\subsection{R 语言与大数据}
+\paragraph{与大数据平台的集成}
+R 与大数据生态有多种结合方式：
+\begin{itemize}[leftmargin=*]
+  \item 数据库连接：通过 \textnormal{DBI}、\textnormal{RMySQL}、\textnormal{RPostgres} 等与关系型数据库直接交互。
+  \item 分布式计算：\textnormal{sparklyr}、\textnormal{SparkR} 能将计算下推到 Apache Spark；\textnormal{RHadoop}、\textnormal{rhdfs} 等可与 Hadoop 生态集成。
+  \item 内存与高性能包：\textnormal{data.table}、\textnormal{dtplyr} 在单机上处理大数据表现优异；\textnormal{bigmemory}、\textnormal{ff} 提供对超出内存数据的支持。
+  \item 并行计算：\textnormal{parallel}、\textnormal{foreach}、\textnormal{future} 等包支持多核与分布式任务并行化。
+\end{itemize}
+
+\paragraph{在数据科学中的角色}
+R 在数据清洗、统计建模、可视化与快速原型方面具有优势。尽管在极大规模（PB 级）数据处理上常与 Spark、数据库或 Python 互补，但 R 在建模实验、可视化展示与统计推断领域仍然是重要工具。
+
+\subsection{小结}
+本章概述了 R 的起源与演化、安装与运行、包管理、工作空间、RStudio IDE、帮助系统以及 R 与大数据的关系。后续章节将对数据类型、控制结构和函数等主题展开详细介绍。
